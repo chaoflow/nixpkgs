@@ -9,6 +9,7 @@
    Please make sure you set the meta.schedulingPriority of all those
    build to a value < 5 to make sure it has lower priority than any of
    the nixpkgs trunk builds.
+   --> this is done in release-lib.nix
 
    This file will be evaluated by hydra with a call like this:
    hydra_eval_jobs --gc-roots-dir \
