@@ -26,8 +26,10 @@ with (import ./release-lib.nix);
 
 } // (mapTestOn (rec {
 
+  python26 = ["x86_64-linux"];
+  python26Full = ["x86_64-linux"];
   python27 = ["x86_64-linux"];
   python27Full = ["x86_64-linux"];
-  #python27Packages = ["x86_64-linux"];
+  python27Packages = ["x86_64-linux"];
 
 } ))
