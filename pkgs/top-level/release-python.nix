@@ -31,5 +31,6 @@ with (import ./release-lib.nix);
   python27 = ["x86_64-linux"];
   python27Full = ["x86_64-linux"];
   python27Packages = ["x86_64-linux"];
+  mesa = ["x86_64-linux"];
 
 } ))
