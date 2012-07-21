@@ -26,7 +26,8 @@ with (import ./release-lib.nix);
 
 } // (mapTestOn (rec {
 
-  gitAndTools = ["x86_64-linux"];
+  git = ["x86_64-linux"];
+  gitFull = ["x86_64-linux"];
   mesa = ["x86_64-linux"];
   python26 = ["x86_64-linux"];
   python26Full = ["x86_64-linux"];
