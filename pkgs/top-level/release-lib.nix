@@ -82,7 +82,7 @@ rec {
 
   /* Find all packages that have a meta.platforms field listing the
      supported platforms. */
-  packagesWithMetaPlatform = attrSet: 
+  condPackagesWithMetaPlatform = validPlatforms: pred: attrSet:
     if builtins ? tryEval then 
       let pairs = pkgs.lib.concatMap 
         (x:
@@ -90,7 +90,7 @@ rec {
 	        (let 
 		   attrVal = (builtins.getAttr x attrSet);
 		 in
-		   {val=(processPackage attrVal); 
+		   {val=(condProcessPackage validPlatforms pred attrVal);
 		    attrVal = attrVal;
 		    attrValIsAttrs = builtins.isAttrs attrVal;
 		    });
@@ -103,17 +103,21 @@ rec {
       in
         builtins.listToAttrs pairs
     else {};
-    
+
+  packagesWithMetaPlatform = condPackagesWithMetaPlatform pkgs.lib.platforms.all (x: true);
+
   # May fail as much as it wishes, we will catch the error.
-  processPackage = attrSet: 
+  condProcessPackage = validPlatforms: pred: attrSet:
     if attrSet ? recurseForDerivations && attrSet.recurseForDerivations then
       packagesWithMetaPlatform attrSet
     else if attrSet ? recurseForRelease && attrSet.recurseForRelease then
       packagesWithMetaPlatform attrSet
     else
-      if attrSet ? meta && attrSet.meta ? platforms
-        then attrSet.meta.platforms
+      if attrSet ? meta && attrSet.meta ? platforms && pred attrSet
+        then pkgs.lib.intersect validPlatforms attrSet.meta.platforms
         else [];
+
+  processPackage = condProcessPackage pkgs.lib.platforms.all (x: true);
 
   /* Common platform groups on which to test packages. */
   inherit (pkgs.lib.platforms) linux darwin cygwin allBut all mesaPlatforms;

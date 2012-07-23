@@ -487,7 +487,9 @@ let
 
   btar = callPackage ../tools/backup/btar { };
 
-  bup = callPackage ../tools/backup/bup { };
+  bup = callPackage ../tools/backup/bup {
+    pandoc = haskellPackages.pandoc;
+  };
 
   bzip2 = callPackage ../tools/compression/bzip2 { };
 
@@ -2895,6 +2897,8 @@ let
   bison24 = callPackage ../development/tools/parsing/bison/bison-2.4.nix { };
 
   bison25 = callPackage ../development/tools/parsing/bison/bison-2.5.nix { };
+
+  bison26 = callPackage ../development/tools/parsing/bison/bison-2.6.nix { };
 
   buildbot = callPackage ../development/tools/build-managers/buildbot {
     inherit (pythonPackages) twisted;
@@ -5701,6 +5705,18 @@ let
       ];
   };
 
+  linux_3_5 = makeOverridable (import ../os-specific/linux/kernel/linux-3.5.nix) {
+    inherit fetchurl stdenv perl mktemp module_init_tools ubootChooser;
+    kernelPatches =
+      [
+        kernelPatches.sec_perm_2_6_24
+        #kernelPatches.aufs3_4
+      ] ++ lib.optionals (platform.kernelArch == "mips")
+      [ kernelPatches.mips_fpureg_emu
+        kernelPatches.mips_fpu_sigill
+      ];
+  };
+
   /* Linux kernel modules are inherently tied to a specific kernel.  So
      rather than provide specific instances of those packages for a
      specific kernel, we have a function that builds those packages
@@ -5821,6 +5837,7 @@ let
   linuxPackages_3_2_xen = recurseIntoAttrs (linuxPackagesFor pkgs.linux_3_2_xen pkgs.linuxPackages_3_2_xen);
   linuxPackages_3_3 = recurseIntoAttrs (linuxPackagesFor pkgs.linux_3_3 pkgs.linuxPackages_3_3);
   linuxPackages_3_4 = recurseIntoAttrs (linuxPackagesFor pkgs.linux_3_4 pkgs.linuxPackages_3_4);
+  linuxPackages_3_5 = recurseIntoAttrs (linuxPackagesFor pkgs.linux_3_5 pkgs.linuxPackages_3_5);
 
   # The current default kernel / kernel modules.
   linux = linuxPackages.kernel;
@@ -7369,7 +7386,7 @@ let
 
   rdesktop = callPackage ../applications/networking/remote/rdesktop { };
 
-  RealPlayer = callPackage ../applications/video/RealPlayer {
+  RealPlayer = callPackage_i686 ../applications/video/RealPlayer {
     libstdcpp5 = gcc33.gcc;
   };
 
@@ -7609,7 +7626,10 @@ let
   };
 
   virtviewer = callPackage ../applications/virtualization/virt-viewer {};
-  virtmanager = callPackage ../applications/virtualization/virt-manager {};
+  virtmanager = callPackage ../applications/virtualization/virt-manager {
+    inherit (gnome) gnome_python;
+  };
+
   virtinst = callPackage ../applications/virtualization/virtinst {};
 
   virtualgl = callPackage ../tools/X11/virtualgl { };

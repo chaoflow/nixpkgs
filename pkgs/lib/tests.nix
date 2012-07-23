@@ -110,5 +110,9 @@ runTests {
         ];
     expected = true;
   };
-  
+
+  testIntersectLists = {
+    expr = intersect [3 2 1] [2 3 4];
+    expected = [2 3];
+  };
 }

@@ -2067,11 +2067,6 @@ let pythonPackages = python.modules // rec {
 
     doCheck = false;
 
-    postInstall = ''
-      find $out -name easy-install.pth | xargs rm -v
-      find $out -name 'site.py*' | xargs rm -v
-    '';
-
     meta = {
       description = "RDFLib is a Python library for working with RDF, a simple yet powerful language for representing information.";
       homepage = http://www.rdflib.net/;
@@ -2513,6 +2508,28 @@ let pythonPackages = python.modules // rec {
     };
   };
 
+
+  urlgrabber =  buildPythonPackage rec {
+    name = "urlgrabber-3.9.1";
+
+    src = fetchurl {
+      url = "http://urlgrabber.baseurl.org/download/${name}.tar.gz";
+      sha256 = "4437076c8708e5754ea04540e46c7f4f233734ee3590bb8a96389264fb0650d0";
+    };
+
+    doCheck = false;
+
+    propagatedBuildInputs = [ pycurl ];
+
+    meta = {
+      homepage = "urlgrabber.baseurl.org";
+      license = "LGPLv2+";
+      description = "Python module for downloading files";
+      maintainers = [ stdenv.lib.maintainers.qknight ];
+    };
+  };
+
+
   urwid = buildPythonPackage (rec {
     name = "urwid-1.0.1";
 
@@ -2540,6 +2557,8 @@ let pythonPackages = python.modules // rec {
     };
 
     patches = [ ../development/python-modules/virtualenv-change-prefix.patch ];
+
+    propagatedBuildInputs = [ python.modules.readline python.modules.sqlite3 ];
 
     doCheck = false;
 
@@ -2800,11 +2819,11 @@ let pythonPackages = python.modules // rec {
   };
 
   larch = buildPythonPackage rec {
-    name = "larch-0.31";
+    name = "larch-1.20120527";
 
     src = fetchurl rec {
-      url = "http://code.liw.fi/debian/pool/main/p/python-larch/python-larch_0.31.orig.tar.gz";
-      sha256 = "18c243a45b35974c304c9b3d8b05718f1272f14c29cd3c9010800cf821064444";
+      url = "http://code.liw.fi/debian/pool/main/p/python-larch/python-larch_1.20120527.orig.tar.gz";
+      sha256 = "2865a1bfa6bd276bf746e8e7cb73d5199d0b6d00045d8c92e158626687d3bbe1";
     };
 
     buildInputs = [ sphinx ];

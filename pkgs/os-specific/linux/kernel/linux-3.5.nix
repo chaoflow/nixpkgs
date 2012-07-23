@@ -142,7 +142,7 @@ let
       XFS_RT y # XFS Realtime subvolume support
       OCFS2_DEBUG_MASKLOG n
       BTRFS_FS_POSIX_ACL y
-      UBIFS_FS_XATTR y
+      UBIFS_FS_XATTR? y
       UBIFS_FS_ADVANCED_COMPR y
       NFSD_V2_ACL y
       NFSD_V3 y
@@ -239,7 +239,8 @@ in
 import ./generic.nix (
 
   rec {
-    version = "3.4.6";
+    version = "3.5";
+    modDirVersion = "3.5.0";
     testing = false;
 
     preConfigure = ''
@@ -248,7 +249,7 @@ import ./generic.nix (
 
     src = fetchurl {
       url = "mirror://kernel/linux/kernel/v3.x/${if testing then "testing/" else ""}linux-${version}.tar.xz";
-      sha256 = "0302q8m4xq0pidsd8ga0568sb620pk4il2kb8gi7dhsq615himjh";
+      sha256 = "0hmkzlk1y93q0r19phm8mhkq60lr92l9jk4dk06r9z8c7wwcx1dr";
     };
 
     config = configWithPlatform stdenv.platform;
