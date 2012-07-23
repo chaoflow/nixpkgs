@@ -164,7 +164,7 @@ rec {
     in
       if dependencies == [] || attrSets == []
         then false
-        else lib.elem dependency inputs ||
+        else pkgs.lib.elem dependency inputs ||
              dependsOn [attrSet] dependencies_tail ||
              dependsOn attrSets_tail dependencies;
 #             dependsOn inputs dependencies;
@@ -179,9 +179,9 @@ rec {
     else
       if attrSet ? meta &&
          attrSet.meta ? platforms &&
-         lib.elem "x86_64-linux" attrSet.meta.platforms &&
+         pkgs.lib.elem "x86_64-linux" attrSet.meta.platforms &&
          dependsOn [attrSet] [pkgs.python26 pkgs.python27]
-        then builtins.trace attrSet.name attrSet.meta.platforms
+        then attrSet.meta.platforms
         else [];
 
 
