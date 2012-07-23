@@ -113,7 +113,9 @@ rec {
     else if attrSet ? recurseForRelease && attrSet.recurseForRelease then
       packagesWithMetaPlatform attrSet
     else
-      if attrSet ? meta && attrSet.meta ? platforms && pred attrSet
+      if attrSet ? meta && attrSet.meta ? platforms &&
+          pkgs.lib.intersect validPlatforms attrSet.meta.platforms != [] &&
+          pred attrSet
         then pkgs.lib.intersect validPlatforms attrSet.meta.platforms
         else [];
 
