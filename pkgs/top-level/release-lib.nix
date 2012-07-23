@@ -124,4 +124,65 @@ rec {
   gtkSupported = linux;
   ghcSupported = linux ++ ["i686-darwin"] ;
 
+  packagesWithMetaPlatformAndPython = attrSet:
+    if builtins ? tryEval then
+      let pairs = pkgs.lib.concatMap
+        (x:
+	  let pair = builtins.tryEval
+	        (let
+		   attrVal = (builtins.getAttr x attrSet);
+		 in
+		   {val=(processPackageIfPython attrVal);
+		    attrVal = attrVal;
+		    attrValIsAttrs = builtins.isAttrs attrVal;
+		    });
+	      success = (builtins.tryEval pair.value.attrVal).success;
+	  in
+          if success && pair.value.attrValIsAttrs &&
+	      pair.value.val != [] then
+	    [{name= x; value=pair.value.val;}] else [])
+        (builtins.attrNames attrSet);
+      in
+        builtins.listToAttrs pairs
+    else {};
+
+  dependsOn = attrSets: dependencies:
+    let
+      attrSet = if attrSets != [] then builtins.head attrSets else
+        { buildInputs = [];
+          buildNativeInputs = [];
+          propagatedBuildInputs = [];
+          propagatedBuildNativeInputs = [];
+        };
+      attrSets_tail = if attrSets != [] then builtins.tail attrSets else [];
+      dependency = if dependencies != [] then builtins.head dependencies else null;
+      dependencies_tail = if dependencies != [] then builtins.tail dependencies else [];
+      inputs = attrSet.buildInputs ++
+               attrSet.buildNativeInputs ++
+               attrSet.propagatedBuildInputs ++
+               attrSet.propagatedBuildNativeInputs;
+    in
+      if dependencies == [] || attrSets == []
+        then false
+        else lib.elem dependency inputs ||
+             dependsOn [attrSet] dependencies_tail ||
+             dependsOn attrSets_tail dependencies;
+#             dependsOn inputs dependencies;
+
+
+  # May fail as much as it wishes, we will catch the error.
+  processPackageIfPython = attrSet:
+    if attrSet ? recurseForDerivations && attrSet.recurseForDerivations then
+      packagesWithMetaPlatform attrSet
+    else if attrSet ? recurseForRelease && attrSet.recurseForRelease then
+      packagesWithMetaPlatform attrSet
+    else
+      if attrSet ? meta &&
+         attrSet.meta ? platforms &&
+         lib.elem "x86_64-linux" attrSet.meta.platforms &&
+         dependsOn [attrSet] [pkgs.python26 pkgs.python27]
+        then builtins.trace attrSet.name attrSet.meta.platforms
+        else [];
+
+
 }
