@@ -1,5 +1,7 @@
 # General list operations.
 
+with import ./trivial.nix;
+
 rec {
   inherit (builtins) head tail length isList;
 
@@ -140,6 +142,11 @@ rec {
       then { right = [h] ++ t.right; wrong = t.wrong; }
       else { right = t.right; wrong = [h] ++ t.wrong; }
     ) { right = []; wrong = []; };
+
+
+  # Intersect two lists
+  intersect = left: right:
+    (partition (flip elem left) right).right;
 
 
   zipListsWith = f: fst: snd:
