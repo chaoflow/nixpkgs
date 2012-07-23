@@ -62,7 +62,8 @@ rec {
         getPkg = pkgs:
           pkgs.lib.addMetaAttrs { schedulingPriority = toString job.schedulingPriority; }
           (pkgs.lib.getAttrFromPath path pkgs);
-      in testOn job.systems getPkg);
+/*      in testOn job.systems getPkg); */
+      in testOn ["x86_64-linux"] getPkg);
 
 
   /* Similar to the testOn function, but with an additional 'crossSystem'
