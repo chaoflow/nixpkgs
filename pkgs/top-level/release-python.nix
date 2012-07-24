@@ -13,5 +13,5 @@ with (import ./release-lib.nix);
 
   tarball = import ./make-tarball.nix;
 
-} // (mapTestOn (packagesWithMetaPlatformAndPython pkgs))
+} // (mapTestOn (condPackagesWithMetaPlatform ["x86_64-linux"] (x: true) pkgs))
 

@@ -62,8 +62,7 @@ rec {
         getPkg = pkgs:
           pkgs.lib.addMetaAttrs { schedulingPriority = toString job.schedulingPriority; }
           (pkgs.lib.getAttrFromPath path pkgs);
-/*      in testOn job.systems getPkg); */
-      in testOn ["x86_64-linux"] getPkg);
+      in testOn job.systems getPkg);
 
 
   /* Similar to the testOn function, but with an additional 'crossSystem'
@@ -83,7 +82,7 @@ rec {
 
   /* Find all packages that have a meta.platforms field listing the
      supported platforms. */
-  packagesWithMetaPlatform = attrSet: 
+  condPackagesWithMetaPlatform = validPlatforms: pred: attrSet:
     if builtins ? tryEval then 
       let pairs = pkgs.lib.concatMap 
         (x:
@@ -91,7 +90,7 @@ rec {
 	        (let 
 		   attrVal = (builtins.getAttr x attrSet);
 		 in
-		   {val=(processPackage attrVal); 
+		   {val=(condProcessPackage validPlatforms pred attrVal);
 		    attrVal = attrVal;
 		    attrValIsAttrs = builtins.isAttrs attrVal;
 		    });
@@ -104,17 +103,43 @@ rec {
       in
         builtins.listToAttrs pairs
     else {};
-    
+
+  packagesWithMetaPlatform = condPackagesWithMetaPlatform pkgs.lib.platforms.all (x: true);
+
   # May fail as much as it wishes, we will catch the error.
-  processPackage = attrSet: 
+  condProcessPackage = validPlatforms: pred: attrSet:
     if attrSet ? recurseForDerivations && attrSet.recurseForDerivations then
-      packagesWithMetaPlatform attrSet
+      condPackagesWithMetaPlatform validPlatforms pred attrSet
     else if attrSet ? recurseForRelease && attrSet.recurseForRelease then
-      packagesWithMetaPlatform attrSet
+      condPackagesWithMetaPlatform validPlatforms pred attrSet
     else
-      if attrSet ? meta && attrSet.meta ? platforms
-        then attrSet.meta.platforms
+      if attrSet ? meta && attrSet.meta ? platforms &&
+          pkgs.lib.intersect validPlatforms attrSet.meta.platforms != [] &&
+          pred (builtins.trace ("Checking: " + attrSet.name) attrSet)
+        then pkgs.lib.intersect validPlatforms (builtins.trace ("Including: " + attrSet.name) attrSet.meta.platforms)
         else [];
+
+  processPackage = condProcessPackage pkgs.lib.platforms.all (x: true);
+
+  # return true if the attrSet or any of its inputs depends on one of
+  # the dependencies
+  dependsOn = dependencies: attrSet:
+    let
+      inputs = pkgs.lib.filter (x: x != null && ! builtins.isString x)
+        ((pkgs.lib.getAttrDefault "buildInputs" attrSet []) ++
+         (pkgs.lib.getAttrDefault "buildNativeInputs" attrSet []) ++
+         (pkgs.lib.getAttrDefault "propagatedBuildInputs" attrSet []) ++
+         (pkgs.lib.getAttrDefault "propagatedBuildNativeInputs" attrSet []) );
+      traceInfo = builtins.trace
+        ("dependsOn: " + attrSet.name + " --- inputs: " + pkgs.lib.debug.showListOfAttrSets inputs)
+        true;
+    in
+      traceInfo &&
+        pkgs.lib.intersect dependencies inputs != [] ||
+        pkgs.lib.any (dependsOnOrIs dependencies) inputs;
+
+  dependsOnOrIs = dependencies: attrSet:
+    pkgs.lib.elem attrSet dependencies || dependsOn dependencies attrSet;
 
   /* Common platform groups on which to test packages. */
   inherit (pkgs.lib.platforms) linux darwin cygwin allBut all mesaPlatforms;
@@ -123,66 +148,5 @@ rec {
   x11Supported = linux;
   gtkSupported = linux;
   ghcSupported = linux ++ ["i686-darwin"] ;
-
-  packagesWithMetaPlatformAndPython = attrSet:
-    if builtins ? tryEval then
-      let pairs = pkgs.lib.concatMap
-        (x:
-	  let pair = builtins.tryEval
-	        (let
-		   attrVal = (builtins.getAttr x attrSet);
-		 in
-		   {val=(processPackageIfPython attrVal);
-		    attrVal = attrVal;
-		    attrValIsAttrs = builtins.isAttrs attrVal;
-		    });
-	      success = (builtins.tryEval pair.value.attrVal).success;
-	  in
-          if success && pair.value.attrValIsAttrs &&
-	      pair.value.val != [] then
-	    [{name= x; value=pair.value.val;}] else [])
-        (builtins.attrNames attrSet);
-      in
-        builtins.listToAttrs pairs
-    else {};
-
-  dependsOn = attrSets: dependencies:
-    let
-      attrSet = if attrSets != [] then builtins.head attrSets else
-        { buildInputs = [];
-          buildNativeInputs = [];
-          propagatedBuildInputs = [];
-          propagatedBuildNativeInputs = [];
-        };
-      attrSets_tail = if attrSets != [] then builtins.tail attrSets else [];
-      dependency = if dependencies != [] then builtins.head dependencies else null;
-      dependencies_tail = if dependencies != [] then builtins.tail dependencies else [];
-      inputs = attrSet.buildInputs ++
-               attrSet.buildNativeInputs ++
-               attrSet.propagatedBuildInputs ++
-               attrSet.propagatedBuildNativeInputs;
-    in
-      if dependencies == [] || attrSets == []
-        then false
-        else pkgs.lib.elem dependency inputs ||
-             dependsOn [attrSet] dependencies_tail ||
-             dependsOn attrSets_tail dependencies;
-#             dependsOn inputs dependencies;
-
-
-  # May fail as much as it wishes, we will catch the error.
-  processPackageIfPython = attrSet:
-    if attrSet ? recurseForDerivations && attrSet.recurseForDerivations then
-      packagesWithMetaPlatform attrSet
-    else if attrSet ? recurseForRelease && attrSet.recurseForRelease then
-      packagesWithMetaPlatform attrSet
-    else
-      if attrSet ? meta &&
-         attrSet.meta ? platforms &&
-         pkgs.lib.elem "x86_64-linux" attrSet.meta.platforms &&
-         dependsOn [attrSet] [pkgs.python26 pkgs.python27]
-        then attrSet.meta.platforms
-        else [];
-
 
 }

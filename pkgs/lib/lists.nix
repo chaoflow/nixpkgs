@@ -1,5 +1,7 @@
 # General list operations.
 
+with import ./trivial.nix;
+
 rec {
   inherit (builtins) head tail length isList;
 
@@ -67,6 +69,11 @@ rec {
   
   # Return true if `list' has an element `x':
   elem = x: list: fold (a: bs: x == a || bs) false list;
+
+  # Like elem but abort after match is found - could replace elem
+  elem' = x: list: if list == []
+    then false
+    else head list == x || elem' x (tail list);
 
 
   # Find the sole element in the list matching the specified
@@ -140,6 +147,11 @@ rec {
       then { right = [h] ++ t.right; wrong = t.wrong; }
       else { right = t.right; wrong = [h] ++ t.wrong; }
     ) { right = []; wrong = []; };
+
+
+  # Intersect two lists
+  intersect = left: right:
+    (partition (flip elem left) right).right;
 
 
   zipListsWith = f: fst: snd:
