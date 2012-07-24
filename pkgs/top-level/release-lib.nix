@@ -115,11 +115,31 @@ rec {
     else
       if attrSet ? meta && attrSet.meta ? platforms &&
           pkgs.lib.intersect validPlatforms attrSet.meta.platforms != [] &&
-          pred attrSet
-        then pkgs.lib.intersect validPlatforms attrSet.meta.platforms
+          pred (builtins.trace ("Checking: " + attrSet.name) attrSet)
+        then pkgs.lib.intersect validPlatforms (builtins.trace ("Including: " + attrSet.name) attrSet.meta.platforms)
         else [];
 
   processPackage = condProcessPackage pkgs.lib.platforms.all (x: true);
+
+  # return true if the attrSet or any of its inputs depends on one of
+  # the dependencies
+  dependsOn = dependencies: attrSet:
+    let
+      inputs = pkgs.lib.filter (x: x != null && ! builtins.isString x)
+        ((pkgs.lib.getAttrDefault "buildInputs" attrSet []) ++
+         (pkgs.lib.getAttrDefault "buildNativeInputs" attrSet []) ++
+         (pkgs.lib.getAttrDefault "propagatedBuildInputs" attrSet []) ++
+         (pkgs.lib.getAttrDefault "propagatedBuildNativeInputs" attrSet []) );
+      traceInfo = builtins.trace
+        ("dependsOn: " + attrSet.name + " --- inputs: " + pkgs.lib.debug.showListOfAttrSets inputs)
+        true;
+    in
+      traceInfo &&
+        pkgs.lib.intersect dependencies inputs != [] ||
+        pkgs.lib.any (dependsOnOrIs dependencies) inputs;
+
+  dependsOnOrIs = dependencies: attrSet:
+    pkgs.lib.elem attrSet dependencies || dependsOn dependencies attrSet;
 
   /* Common platform groups on which to test packages. */
   inherit (pkgs.lib.platforms) linux darwin cygwin allBut all mesaPlatforms;
