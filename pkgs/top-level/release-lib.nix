@@ -109,9 +109,9 @@ rec {
   # May fail as much as it wishes, we will catch the error.
   condProcessPackage = validPlatforms: pred: attrSet:
     if attrSet ? recurseForDerivations && attrSet.recurseForDerivations then
-      packagesWithMetaPlatform attrSet
+      condPackagesWithMetaPlatform validPlatforms pred attrSet
     else if attrSet ? recurseForRelease && attrSet.recurseForRelease then
-      packagesWithMetaPlatform attrSet
+      condPackagesWithMetaPlatform validPlatforms pred attrSet
     else
       if attrSet ? meta && attrSet.meta ? platforms &&
           pkgs.lib.intersect validPlatforms attrSet.meta.platforms != [] &&
