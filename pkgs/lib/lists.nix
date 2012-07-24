@@ -70,6 +70,11 @@ rec {
   # Return true if `list' has an element `x':
   elem = x: list: fold (a: bs: x == a || bs) false list;
 
+  # Like elem but abort after match is found - could replace elem
+  elem' = x: list: if list == []
+    then false
+    else head list == x || elem' x (tail list);
+
 
   # Find the sole element in the list matching the specified
   # predicate, returns `default' if no such element exists, or
