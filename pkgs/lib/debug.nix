@@ -43,6 +43,8 @@ rec {
       else if isInt x then "x is an integer `${toString x}'"
       else if isString x then "x is a string `${substring 0 50 x}...'"
       else "x is probably a path `${substring 0 50 (toString x)}...'";
+  showListOfAttrSets = x:
+      "[${lib.fold (y: acc: if y == null then "null" else y.name + ", " + acc) "" x}]";
 
   # trace the arguments passed to function and its result 
   # maybe rewrite these functions in a traceCallXml like style. Then one function is enough
