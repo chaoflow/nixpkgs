@@ -43,6 +43,11 @@ rec {
     else c: builtins.trace "Deprecated use of lib.getAttr!" (attrByPath a b c);
 
 
+  getAttrDefault = a: b: default: if builtins.hasAttr a b
+    then builtins.getAttr a b
+    else default;
+
+
   getAttrFromPath = attrPath: set:
     let errorMsg = "cannot find attribute `" + concatStringsSep "." attrPath + "'";
     in attrByPath attrPath (abort errorMsg) set;
