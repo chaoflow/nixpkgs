@@ -529,6 +529,8 @@ let
 
   usb_modeswitch = callPackage ../development/tools/misc/usb-modeswitch { };
 
+  clamav = callPackage ../tools/security/clamav { };
+  
   cloog = callPackage ../development/libraries/cloog { };
 
   cloogppl = callPackage ../development/libraries/cloog-ppl { };
@@ -715,6 +717,8 @@ let
   };
 
   fortune = callPackage ../tools/misc/fortune { };
+
+  fprot = callPackage ../tools/security/fprot { };
 
   freeipmi = callPackage ../tools/system/freeipmi {};
 
@@ -1119,6 +1123,8 @@ let
   netkittftp = callPackage ../tools/networking/netkit/tftp { };
 
   netpbm = callPackage ../tools/graphics/netpbm { };
+
+  netrw = callPackage ../tools/networking/netrw { };
 
   netselect = callPackage ../tools/networking/netselect { };
 
