@@ -123,43 +123,31 @@ rec {
 
 
   # get a list of all inputs, excluding null inputs and string inputs
+  # depth 0 returns the derivation itself,
+  # depth 1 are direct inputs,
+  # depth 2 are direct inputs of direct inputs, ...
   # TODO: resolve string inputs to derivations?
-  getInputs = attrSet:
-    pkgs.lib.filter
+  getInputs = depth: attrSet:
+    let
+      inputs = pkgs.lib.filter
         (x: x != null && ! builtins.isString x)
         ((pkgs.lib.getAttrDefault "buildInputs" attrSet []) ++
          (pkgs.lib.getAttrDefault "buildNativeInputs" attrSet []) ++
          (pkgs.lib.getAttrDefault "propagatedBuildInputs" attrSet []) ++
          (pkgs.lib.getAttrDefault "propagatedBuildNativeInputs" attrSet []) );
+    in
+      if depth == 0
+        then [ attrSet ]
+        else inputs ++ (pkgs.lib.concatMap (getInputs (builtins.sub depth 1)) inputs);
+      
 
-
-  # return true if a derivation directly depends on one of the dependencies
-  directlyDependsOn = dependencies: attrSet:
+  # return true if a derivation depends on one of the dependencies
+  dependsOn = depth: dependencies: attrSet:
     let
-      inputs = getInputs attrSet;
+      inputs = getInputs depth attrSet;
     in
       pkgs.lib.intersect dependencies inputs != [];
 
-
-  # return true if the attrSet or any of its inputs depends on one of
-  # the dependencies
-  dependsOn = dependencies: attrSet:
-    let
-      inputs = pkgs.lib.filter (x: x != null && ! builtins.isString x)
-        ((pkgs.lib.getAttrDefault "buildInputs" attrSet []) ++
-         (pkgs.lib.getAttrDefault "buildNativeInputs" attrSet []) ++
-         (pkgs.lib.getAttrDefault "propagatedBuildInputs" attrSet []) ++
-         (pkgs.lib.getAttrDefault "propagatedBuildNativeInputs" attrSet []) );
-      traceInfo = builtins.trace
-        ("dependsOn: " + attrSet.name + " --- inputs: " + pkgs.lib.debug.showListOfAttrSets inputs)
-        true;
-    in
-      traceInfo &&
-        pkgs.lib.intersect dependencies inputs != [] ||
-        pkgs.lib.any (dependsOnOrIs dependencies) inputs;
-
-  dependsOnOrIs = dependencies: attrSet:
-    pkgs.lib.elem attrSet dependencies || dependsOn dependencies attrSet;
 
   /* Common platform groups on which to test packages. */
   inherit (pkgs.lib.platforms) linux darwin cygwin allBut all mesaPlatforms;
