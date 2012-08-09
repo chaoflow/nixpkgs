@@ -16,7 +16,7 @@ with (import ./release-lib.nix);
 } // (mapTestOn
   (condPackagesWithMetaPlatform
      ["x86_64-linux"]
-     (directlyDependsOn
+     (dependsOn 2
         [ pkgs.python26
           pkgs.python26Full
           pkgs.python27
