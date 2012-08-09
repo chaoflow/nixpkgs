@@ -13,5 +13,14 @@ with (import ./release-lib.nix);
 
   tarball = import ./make-tarball.nix;
 
-} // (mapTestOn (condPackagesWithMetaPlatform ["x86_64-linux"] (x: true) pkgs))
+} // (mapTestOn
+  (condPackagesWithMetaPlatform
+     ["x86_64-linux"]
+     (directlyDependsOn
+        [ pkgs.python26
+          pkgs.python26Full
+          pkgs.python27
+          pkgs.python27Full
+          ])
+     pkgs))
 
