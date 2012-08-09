@@ -121,6 +121,26 @@ rec {
 
   processPackage = condProcessPackage pkgs.lib.platforms.all (x: true);
 
+
+  # get a list of all inputs, excluding null inputs and string inputs
+  # TODO: resolve string inputs to derivations?
+  getInputs = attrSet:
+    pkgs.lib.filter
+        (x: x != null && ! builtins.isString x)
+        ((pkgs.lib.getAttrDefault "buildInputs" attrSet []) ++
+         (pkgs.lib.getAttrDefault "buildNativeInputs" attrSet []) ++
+         (pkgs.lib.getAttrDefault "propagatedBuildInputs" attrSet []) ++
+         (pkgs.lib.getAttrDefault "propagatedBuildNativeInputs" attrSet []) );
+
+
+  # return true if a derivation directly depends on one of the dependencies
+  directlyDependsOn = dependencies: attrSet:
+    let
+      inputs = getInputs attrSet;
+    in
+      pkgs.lib.intersect dependencies inputs != [];
+
+
   # return true if the attrSet or any of its inputs depends on one of
   # the dependencies
   dependsOn = dependencies: attrSet:
