@@ -115,31 +115,39 @@ rec {
     else
       if attrSet ? meta && attrSet.meta ? platforms &&
           pkgs.lib.intersect validPlatforms attrSet.meta.platforms != [] &&
-          pred (builtins.trace ("Checking: " + attrSet.name) attrSet)
-        then pkgs.lib.intersect validPlatforms (builtins.trace ("Including: " + attrSet.name) attrSet.meta.platforms)
+          pred attrSet
+        then pkgs.lib.intersect validPlatforms attrSet.meta.platforms
         else [];
 
   processPackage = condProcessPackage pkgs.lib.platforms.all (x: true);
 
-  # return true if the attrSet or any of its inputs depends on one of
-  # the dependencies
-  dependsOn = dependencies: attrSet:
+
+  # get a list of all inputs, excluding null inputs and string inputs
+  # depth 0 returns the derivation itself,
+  # depth 1 are direct inputs,
+  # depth 2 are direct inputs of direct inputs, ...
+  # TODO: resolve string inputs to derivations?
+  getInputs = depth: attrSet:
     let
-      inputs = pkgs.lib.filter (x: x != null && ! builtins.isString x)
+      inputs = pkgs.lib.filter
+        (x: x != null && ! builtins.isString x)
         ((pkgs.lib.getAttrDefault "buildInputs" attrSet []) ++
          (pkgs.lib.getAttrDefault "buildNativeInputs" attrSet []) ++
          (pkgs.lib.getAttrDefault "propagatedBuildInputs" attrSet []) ++
          (pkgs.lib.getAttrDefault "propagatedBuildNativeInputs" attrSet []) );
-      traceInfo = builtins.trace
-        ("dependsOn: " + attrSet.name + " --- inputs: " + pkgs.lib.debug.showListOfAttrSets inputs)
-        true;
     in
-      traceInfo &&
-        pkgs.lib.intersect dependencies inputs != [] ||
-        pkgs.lib.any (dependsOnOrIs dependencies) inputs;
+      if depth == 0
+        then [ attrSet ]
+        else inputs ++ (pkgs.lib.concatMap (getInputs (builtins.sub depth 1)) inputs);
+      
 
-  dependsOnOrIs = dependencies: attrSet:
-    pkgs.lib.elem attrSet dependencies || dependsOn dependencies attrSet;
+  # return true if a derivation depends on one of the dependencies
+  dependsOn = depth: dependencies: attrSet:
+    let
+      inputs = getInputs depth attrSet;
+    in
+      pkgs.lib.intersect dependencies inputs != [];
+
 
   /* Common platform groups on which to test packages. */
   inherit (pkgs.lib.platforms) linux darwin cygwin allBut all mesaPlatforms;
