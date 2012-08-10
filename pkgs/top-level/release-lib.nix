@@ -108,16 +108,17 @@ rec {
 
   # May fail as much as it wishes, we will catch the error.
   condProcessPackage = validPlatforms: pred: attrSet:
-    if attrSet ? recurseForDerivations && attrSet.recurseForDerivations then
-      condPackagesWithMetaPlatform validPlatforms pred attrSet
-    else if attrSet ? recurseForRelease && attrSet.recurseForRelease then
-      condPackagesWithMetaPlatform validPlatforms pred attrSet
-    else
-      if attrSet ? meta && attrSet.meta ? platforms &&
-          pkgs.lib.intersect validPlatforms attrSet.meta.platforms != [] &&
-          pred attrSet
-        then pkgs.lib.intersect validPlatforms attrSet.meta.platforms
-        else [];
+    let
+      recurse = condPackagesWithMetaPlatform validPlatforms pred attrSet;
+      platforms = pkgs.lib.intersect validPlatforms attrSet.meta.platforms;
+    in
+      if (attrSet ? recurseForDerivations && attrSet.recurseForDerivations) ||
+         (attrSet ? recurseForRelease && attrSet.recurseForRelease)
+        then recurse
+        else if attrSet ? meta && attrSet.meta ? platforms &&
+                platforms != [] && pred attrSet
+               then platforms
+               else [];
 
   processPackage = condProcessPackage pkgs.lib.platforms.all (x: true);
 
@@ -139,7 +140,7 @@ rec {
       if depth == 0
         then [ attrSet ]
         else inputs ++ (pkgs.lib.concatMap (getInputs (builtins.sub depth 1)) inputs);
-      
+
 
   # return true if a derivation depends on one of the dependencies
   dependsOn = depth: dependencies: attrSet:
@@ -147,6 +148,24 @@ rec {
       inputs = getInputs depth attrSet;
     in
       pkgs.lib.intersect dependencies inputs != [];
+
+
+  getInputs' = attrSet:
+    pkgs.lib.filter
+        (x: x != null && ! builtins.isString x)
+        ((pkgs.lib.getAttrDefault "buildInputs" attrSet []) ++
+         (pkgs.lib.getAttrDefault "buildNativeInputs" attrSet []) ++
+         (pkgs.lib.getAttrDefault "propagatedBuildInputs" attrSet []) ++
+         (pkgs.lib.getAttrDefault "propagatedBuildNativeInputs" attrSet []) );
+
+
+  dependsOn' = depth: dependencies: attrSet:
+    let
+      inputs = getInputs' attrSet;
+      pred = dependsOn' (builtins.sub depth 1) dependencies;
+    in
+      pkgs.lib.elem attrSet dependencies ||
+        depth != 0 && pkgs.lib.any pred inputs;
 
 
   /* Common platform groups on which to test packages. */
