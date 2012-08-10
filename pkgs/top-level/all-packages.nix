@@ -383,9 +383,9 @@ let
     };
   };
 
-  ec2apitools = callPackage ../tools/virtualization/amazon-ec2-api-tools { };
+  ec2_api_tools = callPackage ../tools/virtualization/ec2-api-tools { };
 
-  ec2amitools = callPackage ../tools/virtualization/amazon-ec2-ami-tools { };
+  ec2_ami_tools = callPackage ../tools/virtualization/ec2-ami-tools { };
 
   altermime = callPackage ../tools/networking/altermime {};
 
@@ -518,6 +518,8 @@ let
   chkrootkit = callPackage ../tools/security/chkrootkit { };
 
   cksfv = callPackage ../tools/networking/cksfv { };
+
+  ciopfs = callPackage ../tools/filesystems/ciopfs { };
 
   colordiff = callPackage ../tools/text/colordiff { };
 
@@ -830,11 +832,9 @@ let
     buggyBiosCDSupport = getConfig ["grub" "buggyBiosCDSupport"] true;
   };
 
-  grub19x = callPackage ../tools/misc/grub/1.9x.nix { };
+  grub2 = callPackage ../tools/misc/grub/2.0x.nix { };
 
-  grub2 = grub19x;
-
-  grub2_efi = callPackage ../tools/misc/grub/1.9x.nix { EFIsupport = true; };
+  grub2_efi = grub2.override { EFIsupport = true; };
 
   gssdp = callPackage ../development/libraries/gssdp {
     inherit (gnome) libsoup;
@@ -974,6 +974,14 @@ let
   ninka = callPackage ../development/tools/misc/ninka { };
 
   nodejs = callPackage ../development/web/nodejs {};
+
+  nodePackages = recurseIntoAttrs (import ./node-packages.nix {
+    inherit pkgs stdenv nodejs fetchurl;
+  });
+
+  npm2nix = callPackage ../development/tools/node/npm2nix {
+    coffeescript = nodePackages."coffee-script";
+  };
 
   ldns = callPackage ../development/libraries/ldns { };
 
@@ -5006,7 +5014,7 @@ let
     inherit (gnome) libsoup;
   };
 
-  v8 = callPackage ../development/libraries/v8 { };
+  v8 = callPackage ../development/libraries/v8 { inherit (pythonPackages) gyp; };
 
   xalanj = xalanJava;
   xalanJava = callPackage ../development/libraries/java/xalanj {
@@ -5021,7 +5029,6 @@ let
   ### DEVELOPMENT / LIBRARIES / JAVASCRIPT
 
   jquery_ui = callPackage ../development/libraries/javascript/jquery-ui { };
-
 
   ### DEVELOPMENT / PERL MODULES
 
