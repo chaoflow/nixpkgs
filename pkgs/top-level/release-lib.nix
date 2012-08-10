@@ -150,6 +150,24 @@ rec {
       pkgs.lib.intersect dependencies inputs != [];
 
 
+  getInputs' = attrSet:
+    pkgs.lib.filter
+        (x: x != null && ! builtins.isString x)
+        ((pkgs.lib.getAttrDefault "buildInputs" attrSet []) ++
+         (pkgs.lib.getAttrDefault "buildNativeInputs" attrSet []) ++
+         (pkgs.lib.getAttrDefault "propagatedBuildInputs" attrSet []) ++
+         (pkgs.lib.getAttrDefault "propagatedBuildNativeInputs" attrSet []) );
+
+
+  dependsOn' = depth: dependencies: attrSet:
+    let
+      inputs = getInputs' attrSet;
+      pred = dependsOn' (builtins.sub depth 1) dependencies;
+    in
+      pkgs.lib.elem attrSet dependencies ||
+        depth != 0 && pkgs.lib.any pred inputs;
+
+
   /* Common platform groups on which to test packages. */
   inherit (pkgs.lib.platforms) linux darwin cygwin allBut all mesaPlatforms;
 
