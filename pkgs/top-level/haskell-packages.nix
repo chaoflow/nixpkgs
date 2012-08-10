@@ -532,9 +532,16 @@ let result = let callPackage = x : y : modifyPrio (newScope result.final x y);
 
   colour = callPackage ../development/libraries/haskell/colour {};
 
-  comonad = callPackage ../development/libraries/haskell/comonad {};
+  comonad_1_1_1_6 = callPackage ../development/libraries/haskell/comonad/1.1.1.6.nix {};
+  comonad_3_0_0_1 = callPackage ../development/libraries/haskell/comonad/3.0.0.1.nix {};
+  comonad = self.comonad_3_0_0_1;
 
-  comonadTransformers = callPackage ../development/libraries/haskell/comonad-transformers {};
+  comonadTransformers_2_1_2 = callPackage ../development/libraries/haskell/comonad-transformers/2.1.2.nix {
+    comonad = self.comonad_1_1_1_6;
+    semigroupoids = self.semigroupoids_1_3_4;
+  };
+  comonadTransformers_3_0 = callPackage ../development/libraries/haskell/comonad-transformers/3.0.nix {};
+  comonadTransformers = self.comonadTransformers_3_0;
 
   compactStringFix = callPackage ../development/libraries/haskell/compact-string-fix {};
 
@@ -596,7 +603,10 @@ let result = let callPackage = x : y : modifyPrio (newScope result.final x y);
 
   dataInttrie = callPackage ../development/libraries/haskell/data-inttrie {};
 
-  dataLens = callPackage ../development/libraries/haskell/data-lens {};
+  dataLens = callPackage ../development/libraries/haskell/data-lens {
+    comonadTransformers = self.comonadTransformers_2_1_2;
+    semigroupoids = self.semigroupoids_1_3_4;
+  };
 
   dataLensTemplate = callPackage ../development/libraries/haskell/data-lens-template {};
 
@@ -623,6 +633,12 @@ let result = let callPackage = x : y : modifyPrio (newScope result.final x y);
   digest = callPackage ../development/libraries/haskell/digest {
     inherit (pkgs) zlib;
   };
+
+  digestiveFunctors = callPackage ../development/libraries/haskell/digestive-functors {};
+
+  digestiveFunctorsHeist = callPackage ../development/libraries/haskell/digestive-functors-heist {};
+
+  digestiveFunctorsSnap = callPackage ../development/libraries/haskell/digestive-functors-snap {};
 
   dimensional = callPackage ../development/libraries/haskell/dimensional {};
 
@@ -1004,6 +1020,8 @@ let result = let callPackage = x : y : modifyPrio (newScope result.final x y);
 
   ListLike = callPackage ../development/libraries/haskell/ListLike {};
 
+  lrucache = callPackage ../development/libraries/haskell/lrucache {};
+
   ltk = callPackage ../development/libraries/haskell/ltk {};
 
   logfloat = callPackage ../development/libraries/haskell/logfloat {};
@@ -1039,6 +1057,8 @@ let result = let callPackage = x : y : modifyPrio (newScope result.final x y);
   monadcryptorandom = callPackage ../development/libraries/haskell/monadcryptorandom {};
 
   monadLoops = callPackage ../development/libraries/haskell/monad-loops {};
+
+  monadLogger = callPackage ../development/libraries/haskell/monad-logger {};
 
   monadPar_0_1_0_3 = callPackage ../development/libraries/haskell/monad-par/0.1.0.3.nix {};
   monadPar_0_3 = callPackage ../development/libraries/haskell/monad-par/0.3.nix {};
@@ -1307,7 +1327,11 @@ let result = let callPackage = x : y : modifyPrio (newScope result.final x y);
 
   semigroups = callPackage ../development/libraries/haskell/semigroups {};
 
-  semigroupoids = callPackage ../development/libraries/haskell/semigroupoids {};
+  semigroupoids_1_3_4 = callPackage ../development/libraries/haskell/semigroupoids/1.3.4.nix {
+    comonad = self.comonad_1_1_1_6;
+  };
+  semigroupoids_3_0 = callPackage ../development/libraries/haskell/semigroupoids/3.0.nix {};
+  semigroupoids = self.semigroupoids_3_0;
 
   shelly = callPackage ../development/libraries/haskell/shelly {};
 
@@ -1320,6 +1344,8 @@ let result = let callPackage = x : y : modifyPrio (newScope result.final x y);
   snap = callPackage ../development/libraries/haskell/snap/snap.nix {};
 
   snapCore = callPackage ../development/libraries/haskell/snap/core.nix {};
+
+  snapLoaderDynamic = callPackage ../development/libraries/haskell/snap/loader-dynamic.nix {};
 
   snapLoaderStatic = callPackage ../development/libraries/haskell/snap/loader-static.nix {};
 
@@ -1379,10 +1405,6 @@ let result = let callPackage = x : y : modifyPrio (newScope result.final x y);
   shakespeareText = callPackage ../development/libraries/haskell/shakespeare-text {};
 
   Shellac = callPackage ../development/libraries/haskell/Shellac/Shellac.nix {};
-
-  ShellacHaskeline = callPackage ../development/libraries/haskell/Shellac/Shellac-haskeline.nix {};
-
-  ShellacReadline = callPackage ../development/libraries/haskell/Shellac/Shellac-readline.nix {};
 
   show = callPackage ../development/libraries/haskell/show {};
 
@@ -1497,6 +1519,8 @@ let result = let callPackage = x : y : modifyPrio (newScope result.final x y);
   uniqueid = callPackage ../development/libraries/haskell/uniqueid {};
 
   unixCompat = callPackage ../development/libraries/haskell/unix-compat {};
+
+  unixTime = callPackage ../development/libraries/haskell/unix-time {};
 
   unlambda = callPackage ../development/libraries/haskell/unlambda {};
 
