@@ -108,16 +108,17 @@ rec {
 
   # May fail as much as it wishes, we will catch the error.
   condProcessPackage = validPlatforms: pred: attrSet:
-    if attrSet ? recurseForDerivations && attrSet.recurseForDerivations then
-      condPackagesWithMetaPlatform validPlatforms pred attrSet
-    else if attrSet ? recurseForRelease && attrSet.recurseForRelease then
-      condPackagesWithMetaPlatform validPlatforms pred attrSet
-    else
-      if attrSet ? meta && attrSet.meta ? platforms &&
-          pkgs.lib.intersect validPlatforms attrSet.meta.platforms != [] &&
-          pred attrSet
-        then pkgs.lib.intersect validPlatforms attrSet.meta.platforms
-        else [];
+    let
+      recurse = condPackagesWithMetaPlatform validPlatforms pred attrSet;
+      platforms = pkgs.lib.intersect validPlatforms attrSet.meta.platforms;
+    in
+      if (attrSet ? recurseForDerivations && attrSet.recurseForDerivations) ||
+         (attrSet ? recurseForRelease && attrSet.recurseForRelease)
+        then recurse
+        else if attrSet ? meta && attrSet.meta ? platforms &&
+                platforms != [] && pred attrSet
+               then platforms
+               else [];
 
   processPackage = condProcessPackage pkgs.lib.platforms.all (x: true);
 
