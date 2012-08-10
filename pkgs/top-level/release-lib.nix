@@ -139,7 +139,7 @@ rec {
       if depth == 0
         then [ attrSet ]
         else inputs ++ (pkgs.lib.concatMap (getInputs (builtins.sub depth 1)) inputs);
-      
+
 
   # return true if a derivation depends on one of the dependencies
   dependsOn = depth: dependencies: attrSet:
