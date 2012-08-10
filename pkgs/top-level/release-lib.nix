@@ -115,8 +115,8 @@ rec {
     else
       if attrSet ? meta && attrSet.meta ? platforms &&
           pkgs.lib.intersect validPlatforms attrSet.meta.platforms != [] &&
-          pred (builtins.trace ("Checking: " + attrSet.name) attrSet)
-        then pkgs.lib.intersect validPlatforms (builtins.trace ("Including: " + attrSet.name) attrSet.meta.platforms)
+          pred attrSet
+        then pkgs.lib.intersect validPlatforms attrSet.meta.platforms
         else [];
 
   processPackage = condProcessPackage pkgs.lib.platforms.all (x: true);
