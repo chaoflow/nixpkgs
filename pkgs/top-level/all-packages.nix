@@ -5577,6 +5577,8 @@ let
 
   ipw2200fw = callPackage ../os-specific/linux/firmware/ipw2200 { };
 
+  iw = callPackage ../os-specific/linux/iw { };
+
   iwlwifi1000ucode = callPackage ../os-specific/linux/firmware/iwlwifi-1000-ucode { };
 
   iwlwifi3945ucode = callPackage ../os-specific/linux/firmware/iwlwifi-3945-ucode { };
@@ -6044,8 +6046,6 @@ let
   rt2860fw = callPackage ../os-specific/linux/firmware/rt2860 { };
 
   rt2870fw = callPackage ../os-specific/linux/firmware/rt2870 { };
-
-  rt73fw = callPackage ../os-specific/linux/firmware/rt73 { };
 
   rtkit = callPackage ../os-specific/linux/rtkit { };
 
@@ -6680,6 +6680,8 @@ let
 
     emms = callPackage ../applications/editors/emacs-modes/emms { };
 
+    flymakeCursor = callPackage ../applications/editors/emacs-modes/flymake-cursor { };
+
     gh = callPackage ../applications/editors/emacs-modes/gh { };
 
     gist = callPackage ../applications/editors/emacs-modes/gist { };
@@ -7061,7 +7063,7 @@ let
     inherit (perlPackages) TextMarkdown URI HTMLParser HTMLScrubber
       HTMLTemplate TimeDate CGISession DBFile CGIFormBuilder LocaleGettext
       RpcXML XMLSimple PerlMagick YAML YAMLLibYAML HTMLTree Filechdir
-      AuthenPassphrase;
+      AuthenPassphrase NetOpenIDConsumer LWPxParanoidAgent CryptSSLeay;
   };
 
   imagemagick = callPackage ../applications/graphics/ImageMagick {
