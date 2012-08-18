@@ -62,6 +62,8 @@ full list of branches I consider worth talking about:
 
 .. _py/extends-packages-and-release-lib: https://github.com/chaoflow/nixpkgs/tree/py/extends-packages-and-release-lib
 
+.. _py/hydra: https://github.com/chaoflow/nixpkgs/tree/py/hydra
+
 .. _python: https://github.com/chaoflow/nixpkgs/tree/python
 
 .. _rebase/personal: https://github.com/chaoflow/nixpkgs/tree/rebase/personal
