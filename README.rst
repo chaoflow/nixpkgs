@@ -46,4 +46,26 @@ full list of branches I consider worth talking about:
 - `rebase/personal`_: my personal branch which is frequently rebased.
 
 
-_jobset:: http://hydra.nixos.org/jobset/nixpkgs/python-rework
+.. _jobset: http://hydra.nixos.org/jobset/nixpkgs/python-rework
+
+.. _channel-nixos: https://github.com/chaoflow/nixpkgs/tree/channel-nixos
+
+.. _py/always-unzip: https://github.com/chaoflow/nixpkgs/tree/py/always-unzip
+
+.. _py/cleanup: https://github.com/chaoflow/nixpkgs/tree/py/cleanup
+
+.. _py/pdb: https://github.com/chaoflow/nixpkgs/tree/py/pdb
+
+.. _py/pth-create: https://github.com/chaoflow/nixpkgs/tree/py/pth-create
+
+.. _py/pth-recursive: https://github.com/chaoflow/nixpkgs/tree/py/pth-recursive
+
+.. _py/extends-packages-and-release-lib: https://github.com/chaoflow/nixpkgs/tree/py/extends-packages-and-release-lib
+
+.. _python: https://github.com/chaoflow/nixpkgs/tree/python
+
+.. _rebase/personal: https://github.com/chaoflow/nixpkgs/tree/rebase/personal
+
+
+
+
