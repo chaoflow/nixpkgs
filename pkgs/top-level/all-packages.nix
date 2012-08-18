@@ -437,6 +437,8 @@ let
 
   bfr = callPackage ../tools/misc/bfr { };
 
+  boomerang = callPackage ../development/tools/boomerang { };
+
   bootchart = callPackage ../tools/system/bootchart { };
 
   bsod = callPackage ../misc/emulators/bsod { };
@@ -491,6 +493,8 @@ let
     inherit (pythonPackages) pyxattr pylibacl setuptools fuse;
     inherit (haskellPackages) pandoc;
   };
+
+  atool = callPackage ../tools/archivers/atool { };
 
   bzip2 = callPackage ../tools/compression/bzip2 { };
 
@@ -2295,6 +2299,8 @@ let
   haskellPackages_ghc741              = recurseIntoAttrs (haskell.packages_ghc741.highPrio);
   # Stable branch snapshot.
   haskellPackages_ghc742              = recurseIntoAttrs (haskell.packages_ghc742);
+  # Release candidate.
+  haskellPackages_ghc761              =                   haskell.packages_ghc761;
   # Reasonably current HEAD snapshot.
   haskellPackages_ghcHEAD             =                   haskell.packages_ghcHEAD;
 
@@ -2886,7 +2892,7 @@ let
   automake110x = callPackage ../development/tools/misc/automake/automake-1.10.x.nix { };
 
   automake111x = callPackage ../development/tools/misc/automake/automake-1.11.x.nix {
-    doCheck = !stdenv.isArm && !stdenv.isCygwin
+    doCheck = !stdenv.isArm && !stdenv.isCygwin && !stdenv.isMips
       # Some of the parallel tests seem to hang on `i386-pc-solaris2.11'.
       && stdenv.system != "i686-solaris"
 
@@ -2895,7 +2901,7 @@ let
   };
 
   automake112x = callPackage ../development/tools/misc/automake/automake-1.12.x.nix {
-    doCheck = !stdenv.isArm && !stdenv.isCygwin
+    doCheck = !stdenv.isArm && !stdenv.isCygwin && !stdenv.isMips
       # Some of the parallel tests seem to hang on `i386-pc-solaris2.11'.
       && stdenv.system != "i686-solaris";
   };
@@ -6107,7 +6113,7 @@ let
 
   uclibc = callPackage ../os-specific/linux/uclibc { };
 
-  uclibcCross = import ../os-specific/linux/uclibc {
+  uclibcCross = callPackage ../os-specific/linux/uclibc {
     inherit fetchurl stdenv libiconv;
     linuxHeaders = linuxHeadersCross;
     gccCross = gccCrossStageStatic;
@@ -6668,6 +6674,8 @@ let
 
     coffee = callPackage ../applications/editors/emacs-modes/coffee { };
 
+    colorTheme = callPackage ../applications/editors/emacs-modes/color-theme { };
+
     cua = callPackage ../applications/editors/emacs-modes/cua { };
 
     ecb = callPackage ../applications/editors/emacs-modes/ecb { };
@@ -6685,6 +6693,8 @@ let
     gh = callPackage ../applications/editors/emacs-modes/gh { };
 
     gist = callPackage ../applications/editors/emacs-modes/gist { };
+
+    jade = callPackage ../applications/editors/emacs-modes/jade { };
 
     jdee = callPackage ../applications/editors/emacs-modes/jdee {
       # Requires Emacs 23, for `avl-tree'.
@@ -6895,6 +6905,7 @@ let
   git = gitAndTools.git;
   gitFull = gitAndTools.gitFull;
   gitSVN = gitAndTools.gitSVN;
+  tig = gitAndTools.tig;
 
   giv = callPackage ../applications/graphics/giv {
     pcre = pcre.override { unicodeSupport = true; };
@@ -7509,7 +7520,9 @@ let
 
   dropbox = callPackage ../applications/networking/dropbox { };
 
-  slim = callPackage ../applications/display-managers/slim { };
+  slim = callPackage ../applications/display-managers/slim {
+    consolekit = null;
+  };
 
   sndBase = builderDefsPackage (import ../applications/audio/snd) {
     inherit fetchurl stdenv stringsWithDeps lib fftw;
@@ -7813,9 +7826,15 @@ let
 
   xineUI = callPackage ../applications/video/xine-ui { };
 
-  xneur = callPackage ../applications/misc/xneur { };
+  xneur_0_13 = callPackage ../applications/misc/xneur { };
 
   xneur_0_8 = callPackage ../applications/misc/xneur/0.8.nix { };
+
+  xneur = xneur_0_13;
+
+  gxneur = callPackage ../applications/misc/gxneur  {
+    inherit (gnome) libglade GConf;
+  };
 
   xournal = callPackage ../applications/graphics/xournal {
     inherit (gnome) libgnomeprint libgnomeprintui libgnomecanvas;
