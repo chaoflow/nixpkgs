@@ -144,6 +144,20 @@ let pythonPackages = python.modules // rec {
   };
 
 
+  area53 = buildPythonPackage (rec {
+    name = "area53-b2c9cdcabd";
+
+    src = fetchgit {
+      url = git://github.com/mariusv/Area53.git;
+      rev = "b2c9cdcabd";
+      sha256 = "b0c12b8c48ed9180c7475fab18de50d63e1b517cfb46da4d2c66fc406fe902bc";
+    };
+    installCommand = "python setup.py install --prefix=$out";
+    doCheck = false;
+    propagatedBuildInputs = [ boto ];
+  });
+
+
   argparse = buildPythonPackage (rec {
     name = "argparse-1.1";
 
@@ -175,6 +189,7 @@ let pythonPackages = python.modules // rec {
     };
   });
 
+
   astng = buildPythonPackage rec {
     name = "logilab-astng-0.21.1";
 
@@ -185,8 +200,8 @@ let pythonPackages = python.modules // rec {
     propagatedBuildInputs = [logilabCommon];
   };
 
-  beautifulsoap = buildPythonPackage (rec {
-    name = "beautifulsoap-3.0.8";
+  beautifulsoup = buildPythonPackage (rec {
+    name = "beautifulsoup-3.0.8";
 
     src = fetchurl {
       url = "http://www.crummy.com/software/BeautifulSoup/download/3.x/BeautifulSoup-3.0.8.tar.gz";
@@ -204,7 +219,6 @@ let pythonPackages = python.modules // rec {
       description = "Undemanding HTML/XML parser";
     };
   });
-
 
   # euca2ools (and maybe Nova) needs boto 1.9, 2.0 doesn't work.
   boto_1_9 = buildPythonPackage (rec {
@@ -359,8 +373,8 @@ let pythonPackages = python.modules // rec {
       md5 = "5f39727415b837abd02651eeb2721749";
     };
 
-    propagatedBuildInputs = [ stompclient distribute ]; 
-      
+    propagatedBuildInputs = [ stompclient distribute ];
+
     doCheck = false;
 
     meta = {
@@ -439,7 +453,7 @@ let pythonPackages = python.modules // rec {
     };
   });
 
-  
+
   dateutil = buildPythonPackage (rec {
     name = "dateutil-1.5";
 
@@ -475,12 +489,12 @@ let pythonPackages = python.modules // rec {
     src = fetchurl {
       url = "http://pypi.python.org/packages/source/d/distribute/distribute-0.6.26.tar.gz";
       md5 = "841f4262a70107f85260362f5def8206"; #"ecd75ea629fee6d59d26f88c39b2d291";
-      
+
     };
 
     buildInputs = [ pkgs.unzip ];
-    
-    installCommand = 
+
+    installCommand =
       ''
         # ehm, YES, the --verbose flags needs to be there, otherwise it tries to patch setuptools!
         easy_install --verbose --prefix=$out .
@@ -494,7 +508,7 @@ let pythonPackages = python.modules // rec {
       platforms = python.meta.platforms;
     };
   });
-  
+
 
   distutils_extra = buildPythonPackage rec {
     name = "distutils-extra-2.26";
@@ -510,7 +524,7 @@ let pythonPackages = python.modules // rec {
     };
   };
 
-  
+
   django = buildPythonPackage rec {
     name = "Django-${version}";
     version = "1.4.1";
@@ -528,7 +542,7 @@ let pythonPackages = python.modules // rec {
     };
   };
 
-  
+
   django_1_3 = buildPythonPackage rec {
     name = "Django-1.3.2";
 
@@ -545,7 +559,7 @@ let pythonPackages = python.modules // rec {
     };
   };
 
-  
+
   django_evolution = buildPythonPackage rec {
     name = "django_evolution-0.6.7";
 
@@ -562,7 +576,7 @@ let pythonPackages = python.modules // rec {
     };
   };
 
-  
+
   djblets = buildPythonPackage rec {
     name = "Djblets-0.6.19";
 
@@ -579,7 +593,7 @@ let pythonPackages = python.modules // rec {
     };
   };
 
-  
+
   dulwich = buildPythonPackage rec {
     name = "dulwich-0.8.1";
 
@@ -600,7 +614,7 @@ let pythonPackages = python.modules // rec {
     };
   };
 
-  
+
   hggit = buildPythonPackage rec {
     name = "hg-git-0.3.1";
 
@@ -617,7 +631,7 @@ let pythonPackages = python.modules // rec {
     };
   };
 
-  
+
   docutils = buildPythonPackage rec {
     name = "docutils-0.8.1";
 
@@ -724,7 +738,7 @@ let pythonPackages = python.modules // rec {
     };
   });
 
-  
+
   foolscap = buildPythonPackage (rec {
     name = "foolscap-0.6.1";
 
@@ -965,6 +979,25 @@ let pythonPackages = python.modules // rec {
   };
 
 
+  pylast = buildPythonPackage rec {
+    name = "pylast-${version}";
+    version = "0.5.11";
+
+    src = fetchurl {
+      url = "http://pypi.python.org/packages/source/p/pylast/${name}.tar.gz";
+      md5 = "506cf1b13020b3ed2f3c845ea0c9830e";
+    };
+
+    doCheck = false;
+
+    meta = {
+      homepage = http://code.google.com/p/pylast/;
+      description = "A python interface to last.fm (and compatibles)";
+      license = pkgs.lib.licenses.asl20;
+    };
+  };
+
+
   libcloud = buildPythonPackage (rec {
     name = "libcloud-0.3.1";
 
@@ -1112,7 +1145,7 @@ let pythonPackages = python.modules // rec {
     };
   });
 
-  
+
   mechanize = buildPythonPackage (rec {
     name = "mechanize-0.1.11";
 
@@ -1147,7 +1180,7 @@ let pythonPackages = python.modules // rec {
     };
   };
 
-  
+
   mock = buildPythonPackage (rec {
     name = "mock-0.7.0";
 
@@ -1454,7 +1487,7 @@ let pythonPackages = python.modules // rec {
     };
   });
 
-  
+
   paramiko = buildPythonPackage rec {
     name = "paramiko-1.7.7.1";
 
@@ -1522,6 +1555,23 @@ let pythonPackages = python.modules // rec {
     meta = {
       description = "Load, configure, and compose WSGI applications and servers";
       homepage = http://pythonpaste.org/deploy/;
+    };
+  };
+
+
+  pep8 = buildPythonPackage rec {
+    name = "pep8-${version}";
+    version = "1.3.3";
+
+    src = fetchurl {
+      url = "http://pypi.python.org/packages/source/p/pep8/${name}.tar.gz";
+      md5 = "093a99ced0cc3b58c01549d7350f5a73";
+    };
+
+    meta = {
+      homepage = http://pypi.python.org/pypi/pep8/;
+      description = "Python style guide checker";
+      license = pkgs.lib.licenses.mit;
     };
   };
 
@@ -1715,6 +1765,23 @@ let pythonPackages = python.modules // rec {
     };
   };
 
+  pyfeed = buildPythonPackage rec {
+    url = "http://www.blarg.net/%7Esteveha/pyfeed-0.7.4.tar.gz";
+    name = stdenv.lib.nameFromURL url ".tar";
+    src = fetchurl {
+      inherit url;
+      sha256 = "1h4msq573m7wm46h3cqlx4rsn99f0l11rhdqgf50lv17j8a8vvy1";
+    };
+    propagatedBuildInputs = [xe];
+
+    # tests not described in setup.py
+    doCheck = false;
+
+    meta = {
+      homepage = "http://home.blarg.net/~steveha/pyfeed.html";
+      description = "Tools for syndication feeds";
+    };
+  };
 
   pygments = buildPythonPackage rec {
     name = "Pygments-1.5";
@@ -1723,7 +1790,7 @@ let pythonPackages = python.modules // rec {
       url = "http://pypi.python.org/packages/source/P/Pygments/${name}.tar.gz";
       md5 = "ef997066cc9ee7a47d01fb4f3da0b5ff";
     };
-    
+
     meta = {
       homepage = http://pygments.org/;
       description = "A generic syntax highlighter";
@@ -1754,6 +1821,30 @@ let pythonPackages = python.modules // rec {
   };
 
 
+  pyinotify = pkgs.stdenv.mkDerivation rec {
+    name = "python-pyinotify-${version}";
+    version = "0.9.3";
+
+    src = fetchgit {
+      url = "git://github.com/seb-m/pyinotify.git";
+      rev = "refs/tags/${version}";
+      sha256 = "d38ce95e4af00391e58246a8d7fe42bdb51d63054b09809600b2faef2a803472";
+    };
+
+    buildInputs = [ python ];
+
+    installPhase = ''
+      python setup.py install --prefix=$out
+    '';
+
+    meta = {
+      homepage = https://github.com/seb-m/pyinotify/wiki;
+      description = "Monitor filesystems events on Linux platforms with inotify";
+      license = pkgs.lib.licenses.mit;
+    };
+  };
+
+
   pyparsing = buildPythonPackage rec {
     name = "pyparsing-1.5.6";
 
@@ -1768,7 +1859,7 @@ let pythonPackages = python.modules // rec {
     };
   };
 
-  
+
   ldap = buildPythonPackage rec {
     name = "python-ldap-2.4.3";
     namePrefix = "";
@@ -1812,7 +1903,7 @@ let pythonPackages = python.modules // rec {
     propagatedBuildInputs = [astng];
   };
 
-  
+
   pymacs = pkgs.stdenv.mkDerivation rec {
     version = "v0.24-beta2";
     name = "Pymacs-${version}";
@@ -1841,7 +1932,7 @@ let pythonPackages = python.modules // rec {
     };
   };
 
-  
+
   pyopengl =
     let version = "3.0.0b5";
     in
@@ -1870,7 +1961,7 @@ let pythonPackages = python.modules // rec {
         };
       };
 
-      
+
   pyreport = buildPythonPackage (rec {
     name = "pyreport-0.3.4c";
 
@@ -2006,7 +2097,7 @@ let pythonPackages = python.modules // rec {
     };
   };
 
-  
+
   pyutil = buildPythonPackage (rec {
     name = "pyutil-1.7.9";
 
@@ -2078,7 +2169,7 @@ let pythonPackages = python.modules // rec {
     };
   });
 
-  
+
   RBTools = buildPythonPackage rec {
     name = "rbtools-0.4.1";
     namePrefix = "";
@@ -2091,7 +2182,7 @@ let pythonPackages = python.modules // rec {
     propagatedBuildInputs = [ setuptools ];
   };
 
-  
+
   recaptcha_client = buildPythonPackage rec {
     name = "recaptcha-client-1.0.6";
 
@@ -2106,7 +2197,7 @@ let pythonPackages = python.modules // rec {
     };
   };
 
-  
+
   reportlab =
    let freetype = pkgs.lib.overrideDerivation pkgs.freetype (args: { configureFlags = "--enable-static --enable-shared"; });
    in buildPythonPackage rec {
@@ -2126,7 +2217,7 @@ let pythonPackages = python.modules // rec {
     };
   };
 
-  
+
   reviewboard = buildPythonPackage rec {
     name = "ReviewBoard-1.6.9";
 
@@ -2142,7 +2233,7 @@ let pythonPackages = python.modules // rec {
       ];
   };
 
-  
+
   rdflib = buildPythonPackage (rec {
     name = "rdflib-3.0.0";
 
@@ -2316,7 +2407,7 @@ let pythonPackages = python.modules // rec {
     };
   };
 
-  
+
   setuptoolsTrial = buildPythonPackage {
     name = "setuptools-trial-0.5.12";
 
@@ -2336,7 +2427,7 @@ let pythonPackages = python.modules // rec {
     };
   };
 
-  
+
   simplejson = buildPythonPackage (rec {
     name = "simplejson-2.1.3";
 
@@ -2362,7 +2453,7 @@ let pythonPackages = python.modules // rec {
     };
   });
 
-  
+
   six = buildPythonPackage rec {
     name = "six-1.1.0";
 
@@ -2379,7 +2470,7 @@ let pythonPackages = python.modules // rec {
     };
   };
 
-  
+
   skype4py = buildPythonPackage (rec {
     name = "Skype4Py-1.0.32.0";
 
@@ -2758,6 +2849,24 @@ let pythonPackages = python.modules // rec {
   };
 
 
+  wokkel = buildPythonPackage (rec {
+    url = "http://wokkel.ik.nu/releases/0.7.0/wokkel-0.7.0.tar.gz";
+    name = pkgs.lib.nameFromURL url ".tar";
+    src = fetchurl {
+      inherit url;
+      sha256 = "0rnshrzw8605x05mpd8ndrx3ri8h6cx713mp8sl4f04f4gcrz8ml";
+    };
+
+    propagatedBuildInputs = [twisted dateutil];
+
+    meta = {
+      description = "Some (mainly XMPP-related) additions to twisted";
+      homepage = "http://wokkel.ik.nu/";
+      license = stdenv.lib.licenses.mit;
+    };
+  });
+
+
   wxPython = wxPython28;
 
 
@@ -2765,6 +2874,23 @@ let pythonPackages = python.modules // rec {
     inherit (pkgs) stdenv fetchurl pkgconfig;
     inherit pythonPackages;
     wxGTK = pkgs.wxGTK28;
+  };
+
+  xe = buildPythonPackage rec {
+    url = "http://www.blarg.net/%7Esteveha/xe-0.7.4.tar.gz";
+    name = stdenv.lib.nameFromURL url ".tar";
+    src = fetchurl {
+      inherit url;
+      sha256 = "0v9878cl0y9cczdsr6xjy8v9l139lc23h4m5f86p4kpf2wlnpi42";
+    };
+
+    # tests not described in setup.py
+    doCheck = false;
+
+    meta = {
+      homepage = "http://home.blarg.net/~steveha/xe.html";
+      description = "XML elements";
+    };
   };
 
   xlib = buildPythonPackage (rec {

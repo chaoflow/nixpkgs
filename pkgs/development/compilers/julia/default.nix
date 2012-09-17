@@ -1,4 +1,4 @@
-{ stdenv, fetchgit, gfortran, perl, m4, llvm, gmp, pcre
+{ stdenv, fetchgit, gfortran, perl, m4, llvm, gmp, pcre, zlib
  , readline, fftwSinglePrec, fftw, libunwind, suitesparse, glpk, fetchurl
  , ncurses, libunistring, lighttpd, patchelf, openblas, liblapack
  } :
@@ -7,14 +7,14 @@ let
 in
 stdenv.mkDerivation rec {
   pname = "julia";
-  date = "20120801";
+  date = "20120904";
   name = "${pname}-git-${date}";
 
   grisu_ver = "1.1.1";
   dsfmt_ver = "2.1";
   openblas_ver = "v0.2.2";
   lapack_ver = "3.4.1";
-  arpack_ver = "3.1.1";
+  arpack_ver = "3.1.2";
   clp_ver = "1.14.5";
   lighttpd_ver = "1.4.29";
 
@@ -33,9 +33,9 @@ stdenv.mkDerivation rec {
     sha256 = "19ffec70f9678f5c159feadc036ca47720681b782910fbaa95aa3867e7e86d8e";
   };
   arpack_src = fetchurl {
-    url = "http://forge.scilab.org/index.php/p/arpack-ng/downloads/417/get/";
+    url = "http://forge.scilab.org/index.php/p/arpack-ng/downloads/497/get/";
     name = "arpack-ng_${arpack_ver}.tar.gz";
-    sha256 = "be250947a7d6eac7dff8c058102fce9922c524aa06be2a090b6e0bb2d1e228cd";
+    sha256 = "1wk06bdjgap4hshx0lswzi7vxy2lrdx353y1k7yvm97mpsjvsf4k";
   };
   lapack_src = fetchurl {
     url = "http://www.netlib.org/lapack/lapack-${lapack_ver}.tgz";
@@ -54,17 +54,17 @@ stdenv.mkDerivation rec {
 
   src = fetchgit {
     url = "git://github.com/JuliaLang/julia.git";
-    rev = "3b413ec24957e400c984002f7cdf6232f5391a7e";
-    sha256 = "c019b724df9203899a1da5815f85d79291778191bbffc1361d2213ff7d2bbc1d";
+    rev = "b842bf4ae4d80f28803ec54f3da412a0248046a9";
+    sha256 = "4d67f4f4d35c76ea8981198e42feb1c30a50ac7e1e15b752fa41b26ebadcd828";
   };
 
-  buildInputs = [ gfortran perl m4 gmp pcre llvm readline 
+  buildInputs = [ gfortran perl m4 gmp pcre llvm readline zlib
     fftw fftwSinglePrec libunwind suitesparse glpk ncurses libunistring patchelf
     openblas liblapack
     ];
 
   configurePhase = ''
-    for i in GMP LLVM PCRE LAPACK OPENBLAS BLAS READLINE FFTW LIBUNWIND SUITESPARSE GLPK LIGHTTPD; 
+    for i in GMP LLVM PCRE LAPACK OPENBLAS BLAS READLINE FFTW LIBUNWIND SUITESPARSE GLPK LIGHTTPD ZLIB; 
     do 
       sed -e "s@USE_SYSTEM_$i=0@USE_SYSTEM_$i=1@" -i Make.inc; 
     done
@@ -80,7 +80,7 @@ stdenv.mkDerivation rec {
     copy_kill_hash "${dsfmt_src}" deps/random
 
     ${if realGcc ==null then "" else 
-    ''export NIX_LDFLAGS="$NIX_LDFLAGS -L${realGcc}/lib -L${realGcc}/lib64 -lpcre -llapack -lm -lfftw3f -lfftw3 -lglpk -lunistring "''}
+    ''export NIX_LDFLAGS="$NIX_LDFLAGS -L${realGcc}/lib -L${realGcc}/lib64 -lpcre -llapack -lm -lfftw3f -lfftw3 -lglpk -lunistring -lz "''}
 
     sed -e 's@ cpp @ gcc -E @g' -i base/Makefile
 

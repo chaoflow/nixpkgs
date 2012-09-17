@@ -49,7 +49,14 @@ stdenv.mkDerivation rec {
       done
     '';
 
-  NIX_CFLAGS_COMPILE = "-DKBD_LOADKEYS=\"${kbd}/bin/loadkeys\" -DKBD_SETFONT=\"${kbd}/bin/setfont\" -fno-stack-protector";
+  NIX_CFLAGS_COMPILE =
+    [ "-DKBD_LOADKEYS=\"${kbd}/bin/loadkeys\""
+      "-DKBD_SETFONT=\"${kbd}/bin/setfont\""
+      # Can't say ${polkit}/bin/pkttyagent here because that would
+      # lead to a cyclic dependency.
+      "-DPOLKIT_AGENT_BINARY_PATH=\"/run/current-system/sw/bin/pkttyagent\""
+      "-fno-stack-protector"
+    ];
 
   makeFlags = "CPPFLAGS=-I${stdenv.gcc.libc}/include";
 
@@ -83,5 +90,6 @@ stdenv.mkDerivation rec {
   meta = {
     homepage = http://www.freedesktop.org/wiki/Software/systemd;
     description = "A system and service manager for Linux";
+    platforms = stdenv.lib.platforms.linux;
   };
 }
