@@ -30,7 +30,7 @@ full list of branches I consider worth talking about:
 - `py/pth-recursive`_: python sitecustomize that recursively loads pth
   files.
 
-- `py/extends-packages-and-release-lib`_: extensions to pkgs.lib and
+- `py/extend-pkgs-and-release-lib`_: extensions to pkgs.lib and
   release-lib, so far only used for py/hydra, but maybe
   polished/sanitized at some point to be merged into master.
 
