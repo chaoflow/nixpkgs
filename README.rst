@@ -60,7 +60,7 @@ full list of branches I consider worth talking about:
 
 .. _py/pth-recursive: https://github.com/chaoflow/nixpkgs/tree/py/pth-recursive
 
-.. _py/extends-packages-and-release-lib: https://github.com/chaoflow/nixpkgs/tree/py/extends-packages-and-release-lib
+.. _py/extend-pkgs-and-release-lib: https://github.com/chaoflow/nixpkgs/tree/py/extend-pkgs-and-release-lib
 
 .. _py/hydra: https://github.com/chaoflow/nixpkgs/tree/py/hydra
 
