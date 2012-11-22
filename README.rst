@@ -70,6 +70,8 @@ full list of branches I consider worth talking about:
 
 .. _python: https://github.com/chaoflow/nixpkgs/tree/python
 
+.. _python-merge: https://github.com/chaoflow/nixpkgs/tree/python-merge
+
 .. _rebase/personal: https://github.com/chaoflow/nixpkgs/tree/rebase/personal
 
 
