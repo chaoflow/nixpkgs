@@ -41,7 +41,11 @@ full list of branches I consider worth talking about:
 - `python`_: branch suming up python enhancement work and build by
   hydra's python-rework jobset_. This branch does not contain and is
   not supposed to contain any commits, except non-fast-forwarded
-  merges of the more specific py/ branches.
+  merges of the more specific py/ branches. Recently changes to this
+  README sneaked in, so let's just continue the README here.
+
+- `python-merge`_: branch suming up python enhancement work meant to
+  be merged.
 
 - `rebase/personal`_: my personal branch which is frequently rebased.
 
