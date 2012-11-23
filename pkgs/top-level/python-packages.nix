@@ -1495,7 +1495,7 @@ let pythonPackages = python.modules // rec {
   #
   #   doCheck = false;
   #
-  #      meta = {
+  #   meta = {
   #     description = "A new experimental interface to optparse which works by introspecting a function definition";
   #     homepage = "http://simonwillison.net/2009/May/28/optfunc/";
   #   };
