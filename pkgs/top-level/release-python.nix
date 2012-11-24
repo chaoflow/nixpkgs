@@ -1457,7 +1457,6 @@ with (import ./release-lib.nix);
   pure = ["x86_64-linux"];
   puredata = ["x86_64-linux"];
   putty = ["x86_64-linux"];
-  py27 = ["x86_64-linux"];
   pycairo = ["x86_64-linux"];
   pycrypto = ["x86_64-linux"];
   pycups = ["x86_64-linux"];
