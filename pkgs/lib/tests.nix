@@ -109,4 +109,10 @@ runTests {
     expr = intersect [3 2 1] [2 3 4];
     expected = [2 3];
   };
+
+  testSort = {
+    expr = sort builtins.lessThan [ 40 2 30 42 ];
+    expected = [2 30 40 42];
+  };
+  
 }
