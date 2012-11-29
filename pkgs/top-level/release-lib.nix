@@ -10,7 +10,6 @@ rec {
     if system == "x86_64-linux" then pkgs_x86_64_linux
     else if system == "i686-linux" then pkgs_i686_linux
     else if system == "x86_64-darwin" then pkgs_x86_64_darwin
-    else if system == "i686-darwin" then pkgs_i686_darwin
     else if system == "x86_64-freebsd" then pkgs_x86_64_freebsd
     else if system == "i686-freebsd" then pkgs_i686_freebsd
     else if system == "i686-cygwin" then pkgs_i686_cygwin
@@ -19,7 +18,6 @@ rec {
   pkgs_x86_64_linux = allPackages { system = "x86_64-linux"; };
   pkgs_i686_linux = allPackages { system = "i686-linux"; };
   pkgs_x86_64_darwin = allPackages { system = "x86_64-darwin"; };
-  pkgs_i686_darwin = allPackages { system = "i686-darwin"; };
   pkgs_x86_64_freebsd = allPackages { system = "x86_64-freebsd"; };
   pkgs_i686_freebsd = allPackages { system = "i686-freebsd"; };
   pkgs_i686_cygwin = allPackages { system = "i686-cygwin"; };
@@ -75,7 +73,7 @@ rec {
         job = toJob value;
         getPkg = pkgs: (pkgs.lib.addMetaAttrs {
             schedulingPriority = toString job.schedulingPriority;
-            maintainers = crossMaintainers; 
+            maintainers = crossMaintainers;
           }
           (pkgs.lib.getAttrFromPath path pkgs));
       in testOnCross crossSystem job.systems getPkg);
@@ -83,10 +81,10 @@ rec {
   /* Find all packages that have a meta.platforms field listing the
      supported platforms. */
   condPackagesWithMetaPlatform = validPlatforms: pred: attrSet:
-    if builtins ? tryEval then 
-      let pairs = pkgs.lib.concatMap 
+    if builtins ? tryEval then
+      let pairs = pkgs.lib.concatMap
         (x:
-	  let pair = builtins.tryEval
+          let pair = builtins.tryEval
 	        (let 
 		   attrVal = (builtins.getAttr x attrSet);
 		 in
@@ -174,6 +172,6 @@ rec {
   /* Platform groups for specific kinds of applications. */
   x11Supported = linux;
   gtkSupported = linux;
-  ghcSupported = linux ++ ["i686-darwin"] ;
+  ghcSupported = linux;
 
 }
