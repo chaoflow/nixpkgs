@@ -1636,6 +1636,7 @@ with (import ./release-lib.nix);
     zbase32 = ["x86_64-linux"];
     zfec = ["x86_64-linux"];
   };
+  python26Packages = python27Packages;
   python3 = ["x86_64-linux"];
   pythonDBus = ["x86_64-linux"];
   pythonIRClib = ["x86_64-linux"];
