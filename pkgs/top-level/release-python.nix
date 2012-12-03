@@ -1560,6 +1560,7 @@ with (import ./release-lib.nix);
     pep8 = ["x86_64-linux"];
     pexpect = ["x86_64-linux"];
     ply = ["x86_64-linux"];
+    pil = ["x86_64-linux"];
     polib = ["x86_64-linux"];
     prettytable = ["x86_64-linux"];
     protobuf = ["x86_64-linux"];
