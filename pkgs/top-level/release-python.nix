@@ -13,7 +13,7 @@ with (import ./release-lib.nix);
 
   tarball = import ./make-tarball.nix;
 
-} // (mapTestOn {
+} // (mapTestOn rec {
 
   a2jmidid = ["x86_64-linux"];
   aacskeys = ["x86_64-linux"];
