@@ -9,7 +9,7 @@ let pythonPackages = python.modules // rec {
 
   buildPythonPackage = import ../development/python-modules/generic {
     inherit (pkgs) lib;
-    inherit python wrapPython setuptools offlineDistutils;
+    inherit python wrapPython setuptools setuptoolsSite offlineDistutils;
   };
 
 
@@ -22,6 +22,11 @@ let pythonPackages = python.modules // rec {
   setuptools = import ../development/python-modules/setuptools {
     inherit (pkgs) stdenv fetchurl;
     inherit python wrapPython;
+  };
+
+  setuptoolsSite = import ../development/python-modules/setuptools/site.nix {
+    inherit (pkgs) stdenv;
+    inherit python setuptools;
   };
 
   offlineDistutils = import ../development/python-modules/offline-distutils {
@@ -54,6 +59,7 @@ let pythonPackages = python.modules // rec {
 
     propagatedBuildInputs = [ notmuch pkgs.dbacl ];
 
+    # error: invalid command 'test'
     doCheck = false;
 
     postInstall = ''
@@ -80,6 +86,7 @@ let pythonPackages = python.modules // rec {
       sha256 = "1b724d47bf766ba3ca7cb6d27c7bb597dbc67dcae1347c5a0f01f80c2246ca07";
     };
 
+    # error: invalid command 'test'
     doCheck = false;
 
     propagatedBuildInputs = [ notmuch urwid twisted magic configobj pygpgme ];
@@ -123,6 +130,7 @@ let pythonPackages = python.modules // rec {
       sha1 = "f124e5e4a6644bf6d1734032a01ac44db1b25a29";
     };
 
+    # error: invalid command 'test'
     doCheck = false;
 
     meta = {
@@ -142,6 +150,8 @@ let pythonPackages = python.modules // rec {
 
     buildInputs = [ pkgs.unzip pkgs.sqlite ];
 
+    # ImportError: No module named apsw
+    # XXX: Looks bad
     doCheck = false;
 
     meta = {
@@ -159,9 +169,14 @@ let pythonPackages = python.modules // rec {
       rev = "b2c9cdcabd";
       sha256 = "b0c12b8c48ed9180c7475fab18de50d63e1b517cfb46da4d2c66fc406fe902bc";
     };
+
     installCommand = "python setup.py install --prefix=$out";
+
+    # error: invalid command 'test'
     doCheck = false;
+
     propagatedBuildInputs = [ boto ];
+
   });
 
 
@@ -175,7 +190,7 @@ let pythonPackages = python.modules // rec {
 
     buildInputs = [ pkgs.unzip ];
 
-    # How do we run the tests?
+    # error: invalid command 'test'
     doCheck = false;
 
     meta = {
@@ -216,7 +231,7 @@ let pythonPackages = python.modules // rec {
       sha256 = "1gasiy5lwbhsxw27g36d88n36xbj52434klisvqhljgckd4xqcy7";
     };
 
-    # No tests implemented
+    # error: invalid command 'test'
     doCheck = false;
 
     meta = {
@@ -284,16 +299,16 @@ let pythonPackages = python.modules // rec {
 
   # bugz = buildPythonPackage (rec {
   #   name = "bugz-0.9.3";
-
+  #
   #   src = fetchgit {
   #     url = "https://github.com/williamh/pybugz.git";
   #     rev = "refs/tags/0.9.3";
   #   };
-
+  #
   #   propagatedBuildInputs = [ argparse python.modules.ssl ];
-
+  #
   #   doCheck = false;
-
+  #
   #   meta = {
   #     homepage = http://www.liquidx.net/pybugz/;
   #     description = "Command line interface for Bugzilla";
@@ -348,6 +363,7 @@ let pythonPackages = python.modules // rec {
       sha256 = "1xlvanhnxgvwd7vvypbafyl6yqfkpnwa9rs9k3058z84gd86bz8d";
     };
 
+    # error: invalid command 'test'
     doCheck = false;
 
     meta = {
@@ -383,6 +399,8 @@ let pythonPackages = python.modules // rec {
 
     propagatedBuildInputs = [ stompclient distribute ];
 
+    #buildInputs = [ coverage ];
+    # needs coverage
     doCheck = false;
 
     meta = {
@@ -401,6 +419,7 @@ let pythonPackages = python.modules // rec {
       md5 = "201dbaa732a9049c839f9bb6c27fc7b5";
     };
 
+    # error: invalid command 'test'
     doCheck = false;
 
     meta = {
@@ -420,9 +439,9 @@ let pythonPackages = python.modules // rec {
       sha256 = "139yfm9yz9k33kgqw4khsljs10rkhhxyywbq9i82bh2r31cil1pp";
     };
 
-    buildInputs = [ pkgs.unzip ];
+    buildInputs = [ pkgs.unzip mock ];
 
-    # The tests fail - I don't know why
+    # couple of failing tests
     doCheck = false;
 
     meta = {
@@ -449,7 +468,7 @@ let pythonPackages = python.modules // rec {
     # http://thread.gmane.org/gmane.comp.file-systems.tahoe.devel/3200 for a
     # discussion.
 
-    # Gives "ValueError: Empty module name" with no clue as to why.
+    # AttributeError: 'module' object has no attribute 'test_darcsver'
     doCheck = false;
 
     meta = {
@@ -507,6 +526,9 @@ let pythonPackages = python.modules // rec {
         # ehm, YES, the --verbose flags needs to be there, otherwise it tries to patch setuptools!
         easy_install --verbose --prefix=$out .
       '';
+
+    # FAIL: test_bad_urls (setuptools.tests.test_packageindex.TestPackageIndex)
+    # AssertionError: False is not true
     doCheck = false;
 
     meta = {
@@ -542,6 +564,7 @@ let pythonPackages = python.modules // rec {
       sha256 = "16s0anvpaccbqmdrhl71z73k0dy2sl166nnc2fbd5lshlgmj13ad";
     };
 
+    # error: invalid command 'test'
     doCheck = false;
 
     meta = {
@@ -559,6 +582,7 @@ let pythonPackages = python.modules // rec {
       sha256 = "0snlrcvk92qj1v0n9dpycn6sw56w4zns4mpc30837q6yi7ylrx4f";
     };
 
+    # error: invalid command 'test'
     doCheck = false;
 
     meta = {
@@ -614,7 +638,9 @@ let pythonPackages = python.modules // rec {
     installCommand = ''
       python setup.py install --prefix="$out" --root=/ --record="$out/lib/${python.libPrefix}/site-packages/dulwich/list.txt" --single-version-externally-managed
     '';
-    doCheck = false;
+
+    # For some reason "python setup.py test" doesn't work with Python 2.6.
+    doCheck = "${python.majorVersion}" != "2.6";
 
     meta = {
       description = "Simple Python implementation of the Git file formats and protocols.";
@@ -648,6 +674,7 @@ let pythonPackages = python.modules // rec {
       sha256 = "0wfz4nxl95jcr2f2mc5gijgighavcghg33plzbz5jyi531jpffss";
     };
 
+    # error: invalid command 'test'
     doCheck = false;
 
     meta = {
@@ -722,6 +749,7 @@ let pythonPackages = python.modules // rec {
       md5 = "abfdbb25d37c28e9da05f1b5c3596d1a";
     };
 
+    # AttributeError: 'NoneType' object has no attribute 'clone'
     doCheck = false;
 
     meta = {
@@ -777,9 +805,6 @@ let pythonPackages = python.modules // rec {
 
     propagatedBuildInputs = [ twisted pkgs.pyopenssl ];
 
-    # For some reason "python setup.py test" doesn't work with Python 2.6.
-    doCheck = false;
-
     meta = {
       homepage = http://foolscap.lothar.com/;
 
@@ -826,7 +851,8 @@ let pythonPackages = python.modules // rec {
       sha256 = "0jrajyppdzb3swcxv3w1mpp88vcy7400gy1v2h2gm3pq0dmggaij";
     };
 
-    # two tests fail on x86_64 at least. I don't know why.
+    # FAIL: test_sanitize_remove_script_elem (genshi.filters.tests.html.HTMLSanitizerTestCase)
+    # FAIL: test_sanitize_remove_src_javascript (genshi.filters.tests.html.HTMLSanitizerTestCase)
     doCheck = false;
 
     buildInputs = [ pkgs.setuptools ];
@@ -924,6 +950,7 @@ let pythonPackages = python.modules // rec {
       sha256 = "1wmd1svx5344alb8ff9vzdam1ccqdl0h7shp1xnsk843hqwc0fz0";
     };
 
+    # error: invalid command 'test'
     doCheck = false;
 
     postUnpack = "find . -print0 | xargs -0 touch";
@@ -942,8 +969,6 @@ let pythonPackages = python.modules // rec {
       url = "http://httplib2.googlecode.com/files/${name}.tar.gz";
       sha256 = "baa7bf431fa9d3c1016562de717e1ebb322a99df72a2918f6b5b8f65fa65bc2e";
     };
-
-    doCheck = false; # doesn't have a test
 
     meta = {
       homepage = "http://code.google.com/p/httplib2";
@@ -980,6 +1005,7 @@ let pythonPackages = python.modules // rec {
       md5 = "f4f7ddc7c5e55a47222a5cc6c0a87b6d";
     };
 
+    # error: invalid command 'test'
     doCheck = false;
 
     meta = {
@@ -1019,6 +1045,7 @@ let pythonPackages = python.modules // rec {
       md5 = "506cf1b13020b3ed2f3c845ea0c9830e";
     };
 
+    # error: invalid command 'test'
     doCheck = false;
 
     meta = {
@@ -1037,11 +1064,12 @@ let pythonPackages = python.modules // rec {
       sha256 = "11qilrs4sd4c1mkd64ikrjsc2vwrshhc54n5mh4xrark9c7ayp0y";
     };
 
-    buildInputs = [ zopeInterface ];
+    buildInputs = [ zopeInterface mock ];
 
     preConfigure = "cp test/secrets.py-dist test/secrets.py";
 
-    # tests fail as of 2012-07-21
+    # ERROR: test_list_locations (test.test_softlayer.SoftLayerTests)
+    # AttributeError: MockSoftLayerTransport instance has no attribute '_parse_response'
     doCheck = false;
 
     meta = {
@@ -1059,7 +1087,8 @@ let pythonPackages = python.modules // rec {
       sha1 = "1eebaee375641c9f29aeb21768f917dd2b985752";
     };
 
-    doCheck = false; # no tests
+    # error: invalid command 'test'
+    doCheck = false;
 
     meta = {
       homepage = http://code.google.com/p/pylockfile/;
@@ -1150,6 +1179,7 @@ let pythonPackages = python.modules // rec {
       md5 = "751e8055be2433dfd1a82e0fb1b12f13";
     };
 
+    # error: invalid command 'test'
     doCheck = false;
 
     meta = {
@@ -1165,6 +1195,7 @@ let pythonPackages = python.modules // rec {
       sha256 = "be37e1d86c65ecacae6683f8805e051e9904e5f2e02bf2b7a34262c46a6d06a7";
     };
 
+    # error: invalid command 'test'
     doCheck = false;
 
     propagatedBuildInputs = [ dateutil numpy pkgs.freetype pkgs.libpng pkgs.pkgconfig pkgs.tcl pkgs.tk pkgs.xlibs.libX11 ];
@@ -1241,6 +1272,7 @@ let pythonPackages = python.modules // rec {
       sha1 = "b71aeaacf31898c3b38d8b9ca5bcc0664499c0de";
     };
 
+    # error: invalid command 'test'
     doCheck = false;
 
     meta = {
@@ -1269,6 +1301,7 @@ let pythonPackages = python.modules // rec {
   MySQL_python = buildPythonPackage {
     name = "MySQL-python-1.2.3";
 
+    # plenty of failing tests
     doCheck = false;
 
     src = fetchurl {
@@ -1276,7 +1309,9 @@ let pythonPackages = python.modules // rec {
       sha256 = "0vkyg9dmj29hzk7fy77f42p7bfj28skyzsjsjry4wqr3z6xnzrkx";
     };
 
-    propagatedBuildInputs = [ pkgs.mysql pkgs.zlib nose ];
+    buildInputs = [ nose ];
+
+    propagatedBuildInputs = [ pkgs.mysql pkgs.zlib ];
 
     meta = {
       description = "MySQL database binding for Python";
@@ -1296,6 +1331,7 @@ let pythonPackages = python.modules // rec {
 
     # No support of GUI yet.
 
+    # error: invalid command 'test'
     doCheck = false;
 
     meta = {
@@ -1328,7 +1364,8 @@ let pythonPackages = python.modules // rec {
       sha256 = "0ssxic389rdc79zkz8dxcjpqdi5qs80h12khkag410cl9cwk11f2";
     };
 
-    doCheck = false; # there is no test command
+    # error: invalid command 'test'
+    doCheck = false;
 
     meta = {
       homepage = https://github.com/drkjam/netaddr/;
@@ -1337,46 +1374,47 @@ let pythonPackages = python.modules // rec {
   };
 
 
-  nevow = buildPythonPackage (rec {
-    name = "nevow-${version}";
-    version = "0.10.0";
-
-    src = fetchurl {
-      url = "http://divmod.org/trac/attachment/wiki/SoftwareReleases/Nevow-${version}.tar.gz?format=raw";
-      sha256 = "90631f68f626c8934984908d3df15e7c198939d36be7ead1305479dfc67ff6d0";
-      name = "${name}.tar.gz";
-    };
-
-    propagatedBuildInputs = [ twisted ];
-
-    postInstall = "twistd --help > /dev/null";
-
-    meta = {
-      description = "Nevow, a web application construction kit for Python";
-
-      longDescription = ''
-        Nevow - Pronounced as the French "nouveau", or "noo-voh", Nevow
-        is a web application construction kit written in Python.  It is
-        designed to allow the programmer to express as much of the view
-        logic as desired in Python, and includes a pure Python XML
-        expression syntax named stan to facilitate this.  However it
-        also provides rich support for designer-edited templates, using
-        a very small XML attribute language to provide bi-directional
-        template manipulation capability.
-
-        Nevow also includes formless, a declarative syntax for
-        specifying the types of method parameters and exposing these
-        methods to the web.  Forms can be rendered automatically, and
-        form posts will be validated and input coerced, rendering error
-        pages if appropriate.  Once a form post has validated
-        successfully, the method will be called with the coerced values.
-      '';
-
-      homepage = http://divmod.org/trac/wiki/DivmodNevow;
-
-      license = "BSD-style";
-    };
-  });
+# 404 Error
+#  nevow = buildPythonPackage (rec {
+#    name = "nevow-${version}";
+#    version = "0.10.0";
+#
+#    src = fetchurl {
+#      url = "http://divmod.org/trac/attachment/wiki/SoftwareReleases/Nevow-${version}.tar.gz?format=raw";
+#      sha256 = "90631f68f626c8934984908d3df15e7c198939d36be7ead1305479dfc67ff6d0";
+#      name = "${name}.tar.gz";
+#    };
+#
+#    propagatedBuildInputs = [ twisted ];
+#
+#    postInstall = "twistd --help > /dev/null";
+#
+#    meta = {
+#      description = "Nevow, a web application construction kit for Python";
+#
+#      longDescription = ''
+#        Nevow - Pronounced as the French "nouveau", or "noo-voh", Nevow
+#        is a web application construction kit written in Python.  It is
+#        designed to allow the programmer to express as much of the view
+#        logic as desired in Python, and includes a pure Python XML
+#        expression syntax named stan to facilitate this.  However it
+#        also provides rich support for designer-edited templates, using
+#        a very small XML attribute language to provide bi-directional
+#        template manipulation capability.
+#
+#        Nevow also includes formless, a declarative syntax for
+#        specifying the types of method parameters and exposing these
+#        methods to the web.  Forms can be rendered automatically, and
+#        form posts will be validated and input coerced, rendering error
+#        pages if appropriate.  Once a form post has validated
+#        successfully, the method will be called with the coerced values.
+#      '';
+#
+#      homepage = http://divmod.org/trac/wiki/DivmodNevow;
+#
+#      license = "BSD-style";
+#    };
+#  });
 
   nose = buildPythonPackage rec {
     name = "nose-1.0.0";
@@ -1385,13 +1423,6 @@ let pythonPackages = python.modules // rec {
       url = "http://pypi.python.org/packages/source/n/nose/${name}.tar.gz";
       md5 = "47a4784c817afa6ef11a505b574584ed";
     };
-
-    # Fails with ‘This platform lacks a functioning sem_open
-    # implementation, therefore, the required synchronization
-    # primitives needed will not function, see issue 3770.’ However,
-    # our Python does seem to be built with the necessary
-    # functionality.
-    doCheck = false;
 
     meta = {
       description = "A unittest-based testing framework for python that makes writing and running tests easier";
@@ -1452,6 +1483,8 @@ let pythonPackages = python.modules // rec {
       python setup.py build --fcompiler="gnu95"
       python setup.py install --prefix=$out
     '';
+
+    # error: invalid command 'test'
     doCheck = false;
 
     buildInputs = [ pkgs.gfortran ];
@@ -1464,7 +1497,7 @@ let pythonPackages = python.modules // rec {
   });
 
   oauth2 = buildPythonPackage (rec {
-    name = "auth2-1.5.211";
+    name = "oauth2-1.5.211";
 
     src = fetchurl {
       url = "http://pypi.python.org/packages/source/o/oauth2/oauth2-1.5.211.tar.gz";
@@ -1472,6 +1505,8 @@ let pythonPackages = python.modules // rec {
     };
 
     propagatedBuildInputs = [ httplib2 ];
+
+    # AttributeError: 'NoneType' object has no attribute 'clone'
     doCheck = false;
 
     meta = {
@@ -1636,6 +1671,7 @@ let pythonPackages = python.modules // rec {
       sha256 = "0x8bfjjqygriry1iyygm5048ykl5qpbpzqfp6i8dhkslm3ryf5fk";
     };
 
+    # error: invalid command 'test'
     doCheck = false;
 
     meta = {
@@ -1674,6 +1710,7 @@ let pythonPackages = python.modules // rec {
       sha256 = "1sr2bb3g7rl7gr6156j5qv71kg06q1x01r1lbps9ksnyz37djn2q";
     };
 
+    # error: invalid command 'test'
     doCheck = false;
 
     meta = {
@@ -1715,6 +1752,7 @@ let pythonPackages = python.modules // rec {
   psycopg2 = buildPythonPackage rec {
     name = "psycopg2-2.0.13";
 
+    # error: invalid command 'test'
     doCheck = false;
 
     src = fetchurl {
@@ -1783,8 +1821,6 @@ let pythonPackages = python.modules // rec {
       python setup.py install --prefix=$out
     '';
 
-    doCheck = false;
-
     meta = {
       description = "Python bindings for PortAudio";
       homepage = "http://people.csail.mit.edu/hubert/pyaudio/";
@@ -1801,7 +1837,7 @@ let pythonPackages = python.modules // rec {
       sha256 = "4a3a085ecf1fcd2736573538ffa114f1f4331b3bbbdd69381e6e172c49c9750f";
     };
 
-    doCheck = false;
+    buildInputs = [ pytz ];
 
     meta = {
       homepage = http://babel.edgewall.org;
@@ -1850,13 +1886,12 @@ let pythonPackages = python.modules // rec {
 
     buildInputs = [ pkgs.curl ];
 
+    # error: invalid command 'test'
     doCheck = false;
 
     preConfigure = ''
       substituteInPlace setup.py --replace '--static-libs' '--libs'
     '';
-
-    installCommand = "python setup.py install --prefix=$out";
 
     meta = {
       homepage = http://pycurl.sourceforge.net/;
@@ -1888,7 +1923,7 @@ let pythonPackages = python.modules // rec {
     };
     propagatedBuildInputs = [xe];
 
-    # tests not described in setup.py
+    # error: invalid command 'test'
     doCheck = false;
 
     meta = {
@@ -1921,6 +1956,7 @@ let pythonPackages = python.modules // rec {
       sha256 = "5fd887c407015296a8fd3f4b867fe0fcca3179de97ccde90449853a3dfb802e1";
     };
 
+    # error: invalid command 'test'
     doCheck = false;
 
     propagatedBuildInputs = [ pkgs.gpgme ];
@@ -1966,7 +2002,10 @@ let pythonPackages = python.modules // rec {
       url = "http://pypi.python.org/packages/source/p/pyparsing/${name}.tar.gz";
       md5 = "1e41cb219dae9fc353bd4cd47636b283";
     };
+
+    # error: invalid command 'test'
     doCheck = false;
+
     meta = {
       homepage = http://pyparsing.wikispaces.com/;
       description = "The pyparsing module is an alternative approach to creating and executing simple grammars, vs. the traditional lex/yacc approach, or the use of regular expressions.";
@@ -1996,6 +2035,8 @@ let pythonPackages = python.modules // rec {
       sha256 = "1idks7j9bn62xzsaxkvhl7bdq6ws8kv8aa0wahfh7724qlbbcf1k";
     };
 
+    # ERROR: testExtended (tests.test_acls.AclExtensions)
+    # IOError: [Errno 0] Error
     doCheck = false;
 
     buildInputs = [ pkgs.acl ];
@@ -2091,6 +2132,7 @@ let pythonPackages = python.modules // rec {
       md5 = "3076164a7079891d149a23f9435581db";
     };
 
+    # error: invalid command 'test'
     doCheck = false;
 
     meta = {
@@ -2120,7 +2162,7 @@ let pythonPackages = python.modules // rec {
               --replace "/usr/local/lib" "${pkgs.sqlite}/lib"
     '';
 
-    # FIXME: How do we run the tests?
+    # error: invalid command 'test'
     doCheck = false;
 
     meta = {
@@ -2182,9 +2224,6 @@ let pythonPackages = python.modules // rec {
       sed -i -e 's|libpython2.7.dylib|lib/libpython2.7.dylib|' Makefile
     '');
 
-    # The regression test suite expects locale support, which our glibc
-    # doesn't have by default.
-    doCheck = false;
     checkPhase = "make -C ../Tests";
 
     installPhase = ''
@@ -2261,6 +2300,7 @@ let pythonPackages = python.modules // rec {
       sha256 = "0jmkffik6hdzs7ng8c65bggss2ai40nm59jykswdf5lpd36cxddq";
     };
 
+    # error: invalid command 'test'
     doCheck = false;
 
     buildInputs = [ pkgs.attr ];
@@ -2330,6 +2370,8 @@ let pythonPackages = python.modules // rec {
     };
 
     buildInputs = [freetype];
+
+    # error: invalid command 'test'
     doCheck = false;
 
     meta = {
@@ -2363,6 +2405,7 @@ let pythonPackages = python.modules // rec {
       sha256 = "1c7ipk5vwqnln83rmai5jzyxkjdajdzbk5cgy1z83nyr5hbkgkqr";
     };
 
+    # error: invalid command 'test'
     doCheck = false;
 
     meta = {
@@ -2445,6 +2488,8 @@ let pythonPackages = python.modules // rec {
 
     buildInputs = [pkgs.gfortran];
     propagatedBuildInputs = [ numpy ];
+
+    # error: invalid command 'test'
     doCheck = false;
 
     # TODO: add ATLAS=${pkgs.atlas}
@@ -2583,6 +2628,7 @@ let pythonPackages = python.modules // rec {
       md5 = "9e8099b57cd27493a6988e9c9b313e23";
     };
 
+    # error: invalid command 'test'
     doCheck = false;
 
     meta = {
@@ -2606,6 +2652,7 @@ let pythonPackages = python.modules // rec {
       sourceRoot=`pwd`/`ls -d S*`
     '';
 
+    # error: invalid command 'test'
     doCheck = false;
 
     propagatedBuildInputs = [ pkgs.xlibs.libX11 pkgs.pythonDBus pkgs.pygobject ];
@@ -2695,7 +2742,9 @@ let pythonPackages = python.modules // rec {
       md5 = "af0a314b6106dd80da24a918c24a1eab";
     };
 
-    doCheck = false;
+    buildInputs = [ mock nose ];
+
+    # XXX: Ran 0 tests in 0.217s
 
     meta = {
       description = "Lightweight and extensible STOMP messaging client";
@@ -2709,15 +2758,15 @@ let pythonPackages = python.modules // rec {
   # XXX: ValueError: ZIP does not support timestamps before 1980
   # svneverever =  buildPythonPackage rec {
   #   name = "svneverever-778489a8";
-
+  #
   #   src = pkgs.fetchgit {
   #     url = git://git.goodpoint.de/svneverever.git;
   #     rev = "778489a8c6f07825fb18c9da3892a781c3d659ac";
   #     sha256 = "41c9da1dab2be7b60bff87e618befdf5da37c0a56287385cb0cbd3f91e452bb6";
   #   };
-
+  #
   #   propagatedBuildInputs = [ pysvn argparse ];
-
+  #
   #   doCheck = false;
   # };
 
@@ -2739,6 +2788,7 @@ let pythonPackages = python.modules // rec {
         --prefix LD_LIBRARY_PATH : $libspaths
     '';
 
+    # error: invalid command 'test'
     doCheck = false;
 
     meta = {
@@ -2774,6 +2824,7 @@ let pythonPackages = python.modules // rec {
       sha256 = "1ihf5031pc1wpwbxpfzzz2bcpwww795n5y22baglyim1lalivd65";
     };
 
+    # couple of failing tests
     doCheck = false;
 
     PYTHON_EGG_CACHE = "`pwd`/.egg-cache";
@@ -2796,6 +2847,9 @@ let pythonPackages = python.modules // rec {
     };
 
     propagatedBuildInputs = [ oauth2 urwid tweepy ];
+
+    #buildInputs = [ tox ];
+    # needs tox
     doCheck = false;
 
     meta = {
@@ -2814,8 +2868,6 @@ let pythonPackages = python.modules // rec {
       url = "http://pypi.python.org/packages/source/t/tweepy/${name}.tar.gz";
       sha256 = "2b9fa225e9254e2cbbb01e59c6e92d9c42e5d41d97e8c74dee93eb09babffde5";
     };
-
-    doCheck = false;
 
     meta = {
       homepage = "https://github.com/tweepy/tweepy";
@@ -2883,6 +2935,7 @@ let pythonPackages = python.modules // rec {
       sha256 = "4437076c8708e5754ea04540e46c7f4f233734ee3590bb8a96389264fb0650d0";
     };
 
+    # error: invalid command 'test'
     doCheck = false;
 
     propagatedBuildInputs = [ pycurl ];
@@ -2899,6 +2952,7 @@ let pythonPackages = python.modules // rec {
   urwid = buildPythonPackage (rec {
     name = "urwid-1.0.2";
 
+    # multiple:  NameError: name 'evl' is not defined
     doCheck = false;
 
     src = fetchurl {
@@ -2926,7 +2980,9 @@ let pythonPackages = python.modules // rec {
 
     propagatedBuildInputs = [ python.modules.readline python.modules.sqlite3 ];
 
-    doCheck = false;
+    buildInputs = [ mock nose ];
+
+    # XXX: Ran 0 tests in 0.003s
 
     meta = with stdenv.lib; {
       description = "a tool to create isolated Python environments";
@@ -2945,6 +3001,7 @@ let pythonPackages = python.modules // rec {
       md5 = "8492e46496e187b49fe5569b5639804e";
     };
 
+    # error: invalid command 'test'
     doCheck = false;
 
     meta = {
@@ -3044,7 +3101,7 @@ let pythonPackages = python.modules // rec {
       sha256 = "0v9878cl0y9cczdsr6xjy8v9l139lc23h4m5f86p4kpf2wlnpi42";
     };
 
-    # tests not described in setup.py
+    # error: invalid command 'test'
     doCheck = false;
 
     meta = {
@@ -3133,8 +3190,6 @@ let pythonPackages = python.modules // rec {
       sha256 = "294c3c0529e84169177bce78d616c768fa1c028a2fbc1854f615d32ed88dbc6c";
     };
 
-    doCheck = false;
-
     meta = {
       description = "Zope.Interface";
       homepage = http://zope.org/Products/ZopeInterface;
@@ -3170,6 +3225,7 @@ let pythonPackages = python.modules // rec {
 
     buildInputs = [ sphinx ];
 
+    # error: invalid command 'test'
     doCheck = false;
 
     meta = {
@@ -3190,6 +3246,7 @@ let pythonPackages = python.modules // rec {
 
     buildInputs = [ sphinx ];
 
+    # error: invalid command 'test'
     doCheck = false;
 
     meta = {
@@ -3210,6 +3267,7 @@ let pythonPackages = python.modules // rec {
 
     buildInputs = [ sphinx ];
 
+    # error: invalid command 'test'
     doCheck = false;
 
     meta = {
@@ -3231,6 +3289,7 @@ let pythonPackages = python.modules // rec {
     buildInputs = [ sphinx ];
     propagatedBuildInputs = [ tracing ttystatus cliapp ];
 
+    # error: invalid command 'test'
     doCheck = false;
 
     meta = {
