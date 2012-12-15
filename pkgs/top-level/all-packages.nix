@@ -3515,6 +3515,8 @@ let
 
   eigen = callPackage ../development/libraries/eigen {};
 
+  eigen2 = callPackage ../development/libraries/eigen/2.0.nix {};
+
   enchant = callPackage ../development/libraries/enchant { };
 
   enet = callPackage ../development/libraries/enet { };
@@ -6589,7 +6591,9 @@ let
 
   avidemux = callPackage ../applications/video/avidemux { };
 
-  avogadro = callPackage ../applications/science/chemistry/avogadro { };
+  avogadro = callPackage ../applications/science/chemistry/avogadro {
+    eigen = eigen2;
+  };
 
   awesome = callPackage ../applications/window-managers/awesome {
     lua = lua5;
@@ -8425,9 +8429,15 @@ let
 
   kde4 = recurseIntoAttrs pkgs.kde47;
 
-  kde47 = kdePackagesFor (pkgs.kde47 // {boost = boost149;}) ../desktops/kde-4.7;
+  kde47 = kdePackagesFor (pkgs.kde47 // {
+      boost = boost149;
+      eigen = eigen2;
+    }) ../desktops/kde-4.7;
 
-  kde48 = kdePackagesFor (pkgs.kde48 // {boost = boost149;}) ../desktops/kde-4.8;
+  kde48 = kdePackagesFor (pkgs.kde48 // {
+      boost = boost149;
+      eigen = eigen2;
+    }) ../desktops/kde-4.8;
 
   kdePackagesFor = self: dir:
     let callPackageOrig = callPackage; in
