@@ -553,6 +553,8 @@ let
 
   unifdef = callPackage ../development/tools/misc/unifdef { };
 
+  "unionfs-fuse" = callPackage ../tools/filesystems/unionfs-fuse { };
+
   usb_modeswitch = callPackage ../development/tools/misc/usb-modeswitch { };
 
   clamav = callPackage ../tools/security/clamav { };
@@ -5468,6 +5470,8 @@ let
   postgresql90 = callPackage ../servers/sql/postgresql/9.0.x.nix { };
 
   postgresql91 = callPackage ../servers/sql/postgresql/9.1.x.nix { };
+
+  postgresql92 = callPackage ../servers/sql/postgresql/9.2.x.nix { };
 
   postgresql_jdbc = callPackage ../servers/sql/postgresql/jdbc { };
 
