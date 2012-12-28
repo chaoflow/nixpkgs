@@ -3752,6 +3752,7 @@ let
   # We can choose:
   libcCrossChooser = name : if (name == "glibc") then glibcCross
     else if (name == "uclibc") then uclibcCross
+    else if (name == "newlib") then newlibCross
     else if (name == "msvcrt" && stdenv.cross.config == "x86_64-w64-mingw32") then
       windows.mingw_w64
     else if (name == "msvcrt") then windows.mingw_headers3
@@ -4642,6 +4643,14 @@ let
   };
 
   nettle = callPackage ../development/libraries/nettle { };
+
+  newlib = callPackage ../development/libraries/newlib { };
+
+  newlibCross = callPackage ../development/libraries/newlib {
+    inherit fetchurl stdenv;
+    gccCross = gccCrossStageStatic;
+    cross = assert crossSystem != null; crossSystem;
+  };
 
   newt = callPackage ../development/libraries/newt { };
 
