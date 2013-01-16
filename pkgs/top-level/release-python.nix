@@ -190,13 +190,11 @@ in
   dia = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
   dico = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
   directfb = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
-  directvnc = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
   disnix = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
   disnixos = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
   DisnixWebService = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
   disper = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
   distcc = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
-  distrho = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
   djview = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
   dmenu = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
   dmraid = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
@@ -204,7 +202,6 @@ in
   docutils = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
   dosbox = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
   doxygen_gui = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
-  dragonegg = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
   drbd = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
   drgeo = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
   dropbox = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
@@ -229,11 +226,9 @@ in
   eduke32 = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
   eggdbus = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
   egoboo = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
-  ekiga = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
   elasticmq = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
   elinks = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
   emacs = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
-  emacs22 = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
   emacs23 = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
   emacs24Packages = {
     autoComplete = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
@@ -250,7 +245,6 @@ in
     haskellMode = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
     jabber = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
     jade = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
-    jdee = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
     js2 = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
     logito = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
     loremIpsum = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
@@ -282,7 +276,6 @@ in
   euca2ools = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
   eukleides = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
   evince = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
-  evolution_data_server = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
   evopedia = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
   expect = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
   extremetuxracer = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
