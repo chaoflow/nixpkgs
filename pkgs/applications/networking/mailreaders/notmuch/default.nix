@@ -1,61 +1,19 @@
-{ fetchurl, stdenv, bash, emacs, gdb, glib, gmime, gnupg,
-  pkgconfig, talloc, xapian
+{ fetchurl, stdenv, bash, dtach, emacs, gdb, glib, gmime, gnupg,
+  perl, pkgconfig, python27, python27Packages, talloc, xapian
 }:
 
 stdenv.mkDerivation rec {
-  name = "notmuch-0.17";
+  name = "notmuch-0.18";
 
   src = fetchurl {
     url = "http://notmuchmail.org/releases/${name}.tar.gz";
-    sha256 = "15dypk2damyvxgfc8dy6iiky1ayxnj5samd4v300pi9nwpky05fj";
+    sha256 = "1ia65iazz2hlp3ja57yn0chs27rzsky9kayw74njwmgi9faw3vh9";
   };
 
-  buildInputs = [ bash emacs gdb glib gmime gnupg pkgconfig talloc xapian ];
+  buildInputs = [ bash dtach emacs gdb glib gmime gnupg perl pkgconfig python27 python27Packages.sphinx talloc xapian ];
 
   patchPhase = ''
-    (cd test && for prg in \
-        aggregate-results.sh \
-        argument-parsing \
-        atomicity \
-        author-order \
-        basic \
-        crypto \
-        count \
-        dump-restore \
-        emacs \
-        emacs-large-search-buffer \
-        encoding \
-        from-guessing \
-        help-test \
-        hooks \
-        json \
-        long-id \
-        maildir-sync \
-        multipart \
-        new \
-        notmuch-test \
-        python \
-        raw \
-        reply \
-        search \
-        search-by-folder \
-        search-insufficient-from-quoting \
-        search-folder-coherence \
-        search-limiting \
-        search-output \
-        search-position-overlap-bug \
-        symbol-hiding \
-        tagging \
-        test-lib.sh \
-        test-verbose \
-        thread-naming \
-        thread-order \
-        uuencode \
-    ;do
-      substituteInPlace "$prg" \
-        --replace "#!/usr/bin/env bash" "#!${bash}/bin/bash"
-    done)
-
+    patchShebangs test
     for src in \
       crypto.c \
       emacs/notmuch-crypto.el
@@ -65,7 +23,7 @@ stdenv.mkDerivation rec {
     done
   '';
 
-  # XXX: emacs tests broken
+  # XXX: couple of tests broken
   doCheck = false;
   checkTarget = "test";
 
