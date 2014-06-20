@@ -12,6 +12,16 @@ let
   forAllSystems = pkgs.lib.genAttrs supportedSystems;
 
   callTest = fn: args: forAllSystems (system: import fn ({ inherit system; } // args));
+  callTestAttrs = file: { path ? [], skip ? [] }:
+    let
+      # test function is imported and called without system to get list of attrnames
+      names = pkgs.lib.filter
+        (x: (pkgs.lib.all (y: x != y)) skip)
+        (pkgs.lib.attrNames (pkgs.lib.getAttrFromPath path (import file { })));
+    in
+      pkgs.lib.genAttrs
+        names
+        (name: forAllSystems (system: (pkgs.lib.getAttrFromPath (path ++ [name]) (import tests/python.nix { inherit system; })).test));
 
   pkgs = import nixpkgs { system = "x86_64-linux"; };
 
@@ -211,6 +221,8 @@ in rec {
   tests.firefox = callTest tests/firefox.nix {};
   tests.firewall = callTest tests/firewall.nix {};
   tests.gnome3 = callTest tests/gnome3.nix {};
+  # XXX: could use callTestAttrs (see tests.python below) with
+  # skip=["swraid"] which seems to be impure, i.e. keeps rebuilding.
   tests.installer.efi = forAllSystems (system: (import tests/installer.nix { inherit system; }).efi.test);
   tests.installer.grub1 = forAllSystems (system: (import tests/installer.nix { inherit system; }).grub1.test);
   tests.installer.lvm = forAllSystems (system: (import tests/installer.nix { inherit system; }).lvm.test);
@@ -234,6 +246,10 @@ in rec {
   tests.openssh = callTest tests/openssh.nix {};
   tests.printing = callTest tests/printing.nix {};
   tests.proxy = callTest tests/proxy.nix {};
+  tests.python = callTestAttrs tests/python.nix {
+    path = ["all"];
+    #skip = ["virtualenvPython26"];
+  };
   tests.quake3 = callTest tests/quake3.nix {};
   tests.runInMachine = callTest tests/run-in-machine.nix {};
   tests.simple = callTest tests/simple.nix {};
