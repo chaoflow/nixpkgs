@@ -1509,7 +1509,7 @@ rec {
       sha256 = "0s74ad6r789810s10dxgvaf48ni6adac2icrdad34zxygqq6bj7f";
     };
 
-    propagatedBuildInputs = [ pythonPackages.six ];
+    buildInputs = [ pythonPackages.six ];
 
     meta = {
       description = "Powerful extensions to the standard datetime module";
@@ -1527,7 +1527,7 @@ rec {
       sha256 = "02dhw57jf5kjcp7ng1if7vdrbnlpb9yjmz7wygwwvf3gni4766bg";
     };
 
-    propagatedBuildInputs = [ pythonPackages.six ];
+    buildInputs = [ pythonPackages.six ];
 
     meta = {
       description = "Powerful extensions to the standard datetime module";
@@ -2990,11 +2990,7 @@ rec {
       md5 = "cf326cfb88a1db6c5b29a3a6d9efb257";
     };
 
-    buildInputs = [ nose mock ];
-    propagatedBuildInputs = [ pyflakes pep8 mccabe ];
-
-    # 3 failing tests
-    #doCheck = false;
+    buildInputs = [ nose mock pyflakes pep8 mccabe ];
 
     meta = {
       description = "code checking using pep8 and pyflakes.";
