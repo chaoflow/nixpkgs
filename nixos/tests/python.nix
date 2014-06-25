@@ -11,6 +11,7 @@
 # Run like:
 #
 # % nix-build python.nix -A virtualenv.python27 --arg debug true
+# % nix-build python.nix -A all
 #
 { system ? builtins.currentSystem, debug ? false }:
 
