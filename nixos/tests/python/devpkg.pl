@@ -8,9 +8,11 @@
 #
 # Note the difference between the distribution name
 # 'python-dateutil' and a package contain within 'dateutil'.
-$machine->succeed(
-    "mkdir -p devpkg/pkg",
-    "echo \"import flake8,pyflakes,dateutil,six,ldap,sys\ndef main():\n  sys.exit(ldap.SCOPE_BASE)\" > devpkg/pkg/__init__.py",
-    "echo \"from setuptools import setup; setup(name='devpkg', version='1.0', packages=['pkg'], install_requires=['flake8', 'python-dateutil', 'python-ldap'], entry_points={'console_scripts': ['devpkg=pkg:main']})\" > devpkg/setup.py",
-    "echo \"import unittest, pkg\nclass TC(unittest.TestCase):\n  def test_(self):\n    self.assertTrue(pkg)\" > devpkg/pkg/tests.py",
-    );
+subtest "Create development package:", sub {
+    $machine->succeed(
+        "mkdir -p devpkg/pkg",
+        "echo \"import flake8,pyflakes,dateutil,six,ldap,sys\ndef main():\n  sys.exit(ldap.SCOPE_BASE)\" > devpkg/pkg/__init__.py",
+        "echo \"from setuptools import setup; setup(name='devpkg', version='1.0', packages=['pkg'], install_requires=['flake8', 'python-dateutil', 'python-ldap'], entry_points={'console_scripts': ['devpkg=pkg:main']})\" > devpkg/setup.py",
+        "echo \"import unittest, pkg\nclass TC(unittest.TestCase):\n  def test_(self):\n    self.assertTrue(pkg)\" > devpkg/pkg/tests.py",
+        );
+};

@@ -14,8 +14,8 @@ my $PYTHONPATH = "PYTHONPATH=$site";
 # just to show up in the logs and make them easier to identify
 subtest "@name@: debug=@debug@, full=@full@, libPrefix=@libPrefix@", sub { };
 
-if ($debug) {
-    print $machine->succeed("ls -l $site");
-    print $machine->succeed("$python -c 'import sys,pprint;pprint.pprint(sys.path)'");
-    print $machine->succeed("$PYTHONPATH $python -c 'import sys,pprint;pprint.pprint(sys.path)'");
-}
+# if ($debug) {
+#     print $machine->succeed("ls -l $site");
+#     print $machine->succeed("$python -c 'import sys,pprint;pprint.pprint(sys.path)'");
+#     print $machine->succeed("$PYTHONPATH $python -c 'import sys,pprint;pprint.pprint(sys.path)'");
+# }

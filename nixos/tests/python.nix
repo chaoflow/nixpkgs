@@ -35,6 +35,7 @@ let
                               (attrValues pythonModules));
     in {
       environment.systemPackages = systemPackages;
+      security.initialRootPassword = "";
     };
 
   # slow
@@ -81,7 +82,7 @@ let
 
   makeVirtualenvTest = makePythonTest "virtualenv"
     (testScriptDevpkg + testScriptVirtualenv)
-    ["dateutil" "flake8" "ldap" "nose" "recursivePthLoader" "virtualenv"];
+    ["dateutil" "flake8" "ldap" "nose" "virtualenv"];
 
   makeBuildout171Test = makePythonTest "buildout171"
     (testScriptDevpkg + testScriptBuildout)
