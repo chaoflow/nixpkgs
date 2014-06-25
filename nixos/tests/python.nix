@@ -36,11 +36,12 @@ let
       environment.systemPackages = systemPackages;
     };
 
-  # XXX: replaceSubstring and substitute could/should move to lib
-
+  # slow
   replaceSubstring = old: new: str:
     concatStrings (intersperse new (splitString old str));
 
+  # evaluated every time, not nice
+  # consider passing vars via environment variables
   substitute = attrs: str:
     let replaceVar = name: _str:
           replaceSubstring "@${name}@" (getAttr name attrs) _str;
