@@ -12,7 +12,8 @@
 { nixpkgs ? { outPath = (import ./all-packages.nix {}).lib.cleanSource ../..; revCount = 1234; shortRev = "abcdef"; }
 , officialRelease ? false
 , # The platforms for which we build Nixpkgs.
-  supportedSystems ? [ "x86_64-linux" "i686-linux" "x86_64-darwin" ]
+  #supportedSystems ? [ "x86_64-linux" "i686-linux" "x86_64-darwin" ]
+  supportedSystems ? [ "x86_64-linux" ]
 }:
 
 with import ./release-lib.nix { inherit supportedSystems; };
@@ -28,13 +29,9 @@ let
           constituents =
             [ jobs.tarball
               jobs.stdenv.x86_64-linux
-              jobs.stdenv.i686-linux
-              jobs.stdenv.x86_64-darwin
               jobs.linux.x86_64-linux
-              jobs.linux.i686-linux
               # Ensure that X11/GTK+ are in order.
               jobs.thunderbird.x86_64-linux
-              jobs.thunderbird.i686-linux
               /* not ready yet
               jobs.glib-tested.x86_64-linux # standard glib doesn't do checks
               jobs.glib-tested.i686-linux
