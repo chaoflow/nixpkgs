@@ -131,12 +131,14 @@ let
   forAllSystems = genAttrs supportedSystems;
   callPackage = pkgs.newScope callPackageScope;
 
+
   callTest = path: args: addAll (forAllSystems (system:
     let
       testlib = import ./. { inherit system failBuildOnTestFailure; };
     in
       testlib.callPackage path args
   ));
+
 
   callTestTree = path: args: 
     let
@@ -151,6 +153,7 @@ let
         recursiveUpdate acc (systemWrapLeaves system (getAttr system tree)))
       {}
       (attrNames tree));
+
 
   # i686-linux.foo.bar -> foo.bar.i686-linux
   # x86_64-linux.foo.bar -> foo.bar.x86_64-linux
@@ -204,6 +207,8 @@ let
     makePythonTest
     ;
   };
+
+
   testlib = callPackageScope // { inherit
     addAll
     callTest

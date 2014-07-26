@@ -72,6 +72,11 @@ python: self: {
     md5 = "5a3f3fa6a4bad126c88aaaa7dab682f5";
   };
 
+  mock = {
+    name = "mock-1.0.1";
+    md5 = "c3971991738caa55ec7c356bbc154ee2";
+  };
+
   nose = {
     name = "nose-1.3.3";
     md5 = "42776061bf5206670cb819176dc78654";
