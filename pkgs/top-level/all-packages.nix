@@ -12460,6 +12460,8 @@ let
 
   nixops = callPackage ../tools/package-management/nixops { };
 
+  nixtest = callPackage ../tools/package-management/nixtest { };
+
   nix-prefetch-scripts = callPackage ../tools/package-management/nix-prefetch-scripts { };
 
   nix-repl = callPackage ../tools/package-management/nix-repl { };
