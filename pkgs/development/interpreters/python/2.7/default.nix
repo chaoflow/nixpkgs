@@ -1,5 +1,7 @@
 { stdenv, fetchurl, zlib ? null, zlibSupport ? true, bzip2, includeModules ? false
-, sqlite, tcl, tk, x11, openssl, readline, db, ncurses, gdbm, libX11, self, callPackage }:
+, sqlite, tcl, tk, x11, openssl, readline, db, ncurses, gdbm, libX11, self, callPackage
+, site, tool, wheels  # only passthru
+}:
 
 assert zlibSupport -> zlib != null;
 
@@ -93,6 +95,7 @@ let
       '';
 
     passthru = rec {
+      inherit site tool wheels;
       inherit zlibSupport;
       isPy2 = true;
       isPy27 = true;

@@ -1,6 +1,7 @@
 { stdenv, fetchurl, zlib ? null, zlibSupport ? true, bzip2, pkgconfig, libffi
 , sqlite, openssl, ncurses, pythonFull, expat, tcl, tk, x11, libX11
-, makeWrapper, callPackage, self }:
+, makeWrapper, callPackage, self
+, site, tool, wheels }:
 
 assert zlibSupport -> zlib != null;
 
@@ -95,12 +96,15 @@ let
          --set LIBRARY_PATH "${LIBRARY_PATH}"
     '';
 
+<<<<<<< HEAD:pkgs/development/interpreters/pypy/2.4/default.nix
     passthru = rec {
+      inherit site tool wheels;
       inherit zlibSupport libPrefix;
       executable = "pypy";
       isPypy = true;
       buildEnv = callPackage ../../python/wrapper.nix { python = self; };
       interpreter = "${self}/bin/${executable}";
+      sitePackages = "lib/${libPrefix}/site-packages";
     };
 
     enableParallelBuilding = true;

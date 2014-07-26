@@ -4130,7 +4130,49 @@ let
   python27Full = python27.override {
     includeModules = true;
     self = python27Full;
+
+  python26 = callPackage ../development/interpreters/python/2.6 {
+    db = db47;
+    site = callPackage ../development/python-wheels/site.nix { python = python26; };
+    tool = callPackage ../development/python-wheels/tool.nix { python = python26; };
+    wheels = callPackage ../development/python-wheels { python = python26; };
   };
+  python27 = callPackage ../development/interpreters/python/2.7 {
+    site = callPackage ../development/python-wheels/site.nix { python = python27; };
+    tool = callPackage ../development/python-wheels/tool.nix { python = python27; };
+    wheels = callPackage ../development/python-wheels { python = python27; };
+  };
+  python32 = callPackage ../development/interpreters/python/3.2 {
+    site = callPackage ../development/python-wheels/site.nix { python = python32; };
+    tool = callPackage ../development/python-wheels/tool.nix { python = python32; };
+    wheels = callPackage ../development/python-wheels { python = python32; };
+  };
+  python33 = callPackage ../development/interpreters/python/3.3 {
+    site = callPackage ../development/python-wheels/site.nix { python = python33; };
+    tool = callPackage ../development/python-wheels/tool.nix { python = python33; };
+    wheels = callPackage ../development/python-wheels { python = python33; };
+  };
+  python34 = hiPrio (callPackage ../development/interpreters/python/3.4 {
+    site = callPackage ../development/python-wheels/site.nix { python = python34; };
+    tool = callPackage ../development/python-wheels/tool.nix { python = python34; };
+    wheels = callPackage ../development/python-wheels { python = python34; };
+  });
+
+  pypy = callPackage ../development/interpreters/pypy/2.3 {
+    site = callPackage ../development/python-wheels/site.nix { python = pypy; };
+    tool = callPackage ../development/python-wheels/tool.nix { python = pypy; };
+    wheels = callPackage ../development/python-wheels { python = pypy; };
+  };
+
+  # python26Full = python26.site {
+  #   name = "fullpython-${python26.version}";
+  #   modules = lib.filter (v: v != null) (lib.attrValues python26.modules);
+  # };
+
+  # python27Full = python27.site {
+  #   name = "fullpython-${python27.version}";
+  #   modules = lib.filter (v: v != null) (lib.attrValues python27.modules);
+  # };
 
   python2nix = callPackage ../tools/package-management/python2nix { };
 

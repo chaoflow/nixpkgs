@@ -1,0 +1,138 @@
+
+* Concepts
+
+** Wheels
+
+[[https://pypi.python.org/pypi][PyPI]] offers sources and oftentimes wheels for python packages. See
+[[https://pypi.python.org/pypi/click][click]] for an example.
+
+[[http://wheel.readthedocs.org/en/latest/][Wheel]] is a built-package format and the latest in python packaging
+technologoy, specifically a successor to [[http://wheel.readthedocs.org/en/latest/#why-not-egg][eggs]]. It is a ZIP-format
+archive with a specially formatted filename and the .whl extension.
+
+In nixpkgs we build wheels from source and do not use PyPI wheels,
+except for bootstrapping our wheel build system.
+
+*** Rationale
+
+Building from source is the only viable option for python packages
+with C dependencies, like [[https://pypi.python.org/pypi/lxml][lxml]], because they need to be built against
+our in-store libraries.
+
+For simplicity, all python packages are built from source. As packages
+are built by [[http://hydra.nixos.org/project/nixpkgs][hydra]], this does not affect the end-user of python
+packages and the compilation overhead (for hydra) is negligible.
+
+*** Defining wheels
+
+**** wheels-base.nix
+provides ``wheels.build`` and wheels needed to build wheels. Use this
+as a base to create your own set of wheels.
+
+**** wheels.nix
+contains the default set of wheels built for and carried by each
+python interpreter, e.g. ``python34.wheels.ipdb``.
+
+Wheels are not meant to be installed into profiles and you do not need
+to define an explicit wheel to package some python program, see [[*Tools][Tools]].
+
+Example wheel definition:
+
+#+BEGIN_SRC nix
+    pytest = {
+      name = "pytest-2.6.0";
+      md5 = "e492f76a986cb9dd0818b7ecc89af92e";
+    };
+#+END_SRC
+
+Or with explicit source, not on pypi:
+
+#+BEGIN_SRC nix
+    unveil = {
+      disable = python.isPy26 or false;
+      name = "unveil-0.20140726";
+      src = fetchurl {
+        url = https://github.com/chaoflow/unveil/archive/33cd58263e4fdd863757de7be859fcd538764748.zip;
+        sha256 = "08p9nzp9jkhhl136xfyb5drwczg63j1k42vgn3k12bw21dv2p47c";
+    };
+#+END_SRC
+
+**** TODO wheels-meta.nix
+Meta data for wheels generated from wheels.
+
+**** TODO wheels-requires.nix
+Requires and extra-requires information for wheels generated from
+wheels.
+
+*** Wheels in the store
+
+The way wheels are stored is an implementation detail and you should
+not use wheels directly but use them with [[*Tools][python.tool]] and [[*Sites][python.site]].
+
+In addition to the .whl file, wheels are stored unpacked mainly for
+runtime dependeny management to work. [[*Tools][python.tool]] and [[*Sites][python.site]]
+currently use these unpacked wheels. Compiled python files are version
+specific, which currently makes all wheels version specific.
+
+Wheels carry metadata which we can use to enrich our nix expressions.
+
+Wheels may use entry_points to define scripts or carry scripts in
+wheel.data/scripts. These are not meant for direct usage but to be
+processed by consumers of wheels.
+
+** Tools and Sites
+
+A site is a python interpreter, a set of wheels and optionally scripts
+created for some of the wheels. The site is PYTHONHOME to the python
+interpreter and does not rely on PYTHONPATH, which leaves PYTHONPATH
+at your disposal.
+
+A tool uses a site behind the scenes, but creates the scripts in a
+separate environment. Use this, if you only want the scripts installed
+in contrast to python and site-packages.
+
+Get a tool for an existing wheel, e.g. the ``unveil`` from above:
+
+#+BEGIN_SRC nix
+    unveil = python27.tool {
+      wheel = python27.wheels.unveil;
+      doInstallCheck = true;
+      installCheckPhase = "$out/bin/unveil --help";
+    };
+#+END_SRC
+
+Or if the default, not yet existing install checks are enough:
+
+#+BEGIN_SRC nix
+    grako = python.tool { wheel = python.wheel.grako; };
+#+END_SRC
+
+And a tool implicitly creating a wheel, if there is no need to share
+the wheel as API for all python versions (yet). The transition from
+implicit generation to explicit is transparent.
+
+#+BEGIN_SRC nix
+  XXX: include nixtest snippet'
+#+END_SRC
+
+For more complex examples see and compare my [[https://github.com/chaoflow/skel/blob/master/.nixpkgs/config.nix#L33][config.nix ipythons]] and
+[[https://github.com/chaoflow/skel/blob/master/.nixpkgs/config.nix#L53][config.nix ipython-sites]].
+
+Installing ``nix-env -i ipythons`` in my user profile gives me
+ipython2.7, ipython3.2, ipython3.3, ipython3.4 to read documention `?
+os` and lookup source code `?? os`` for all packaged wheels, at least
+for the newest packaged versions. The ``python`` interpreters are not
+available themselves, not to confuse projects, but instead to complain
+about a missing interpreter and to get their own dedicated one.
+
+** Wheelhouses
+
+A wheelhouse is a directory with (symlinks to) wheels. This can be
+used for example by pip for offline installations. Sites provide
+wheelhouses containing all their wheels and there are wheelhouses for
+all wheels of a specific python version.
+
+#+BEGIN_SRC sh
+  nix-build -A pkgs.python27.wheels.all --out-link wheelhouse
+  pip install --use-wheel --no-index --find-links ./wheelhouse flake8
+#+END_SRC

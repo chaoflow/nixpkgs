@@ -11,6 +11,7 @@
 , zlib
 , callPackage
 , self
+, site, tool, wheels  # only passthru
 }:
 
 assert readline != null -> ncurses != null;
@@ -67,6 +68,7 @@ stdenv.mkDerivation {
   '';
 
   passthru = rec {
+    inherit site tool wheels;
     zlibSupport = zlib != null;
     sqliteSupport = sqlite != null;
     dbSupport = db != null;

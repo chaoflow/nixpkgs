@@ -12,6 +12,7 @@
 , zlib
 , callPackage
 , self
+, site, tool, wheels  # only passthru
 }:
 
 assert readline != null -> ncurses != null;
@@ -45,6 +46,7 @@ stdenv.mkDerivation {
     ${optionalString stdenv.isDarwin ''export NIX_CFLAGS_COMPILE="$NIX_CFLAGS_COMPILE -msse2"''}
 
     configureFlagsArray=( --enable-shared --with-threads
+                          --without-ensurepip
                           CPPFLAGS="${concatStringsSep " " (map (p: "-I${p}/include") buildInputs)}"
                           LDFLAGS="${concatStringsSep " " (map (p: "-L${p}/lib") buildInputs)}"
                           LIBS="${optionalString (!stdenv.isDarwin) "-lcrypt"} ${optionalString (ncurses != null) "-lncurses"}"
@@ -70,6 +72,7 @@ stdenv.mkDerivation {
   '';
 
   passthru = rec {
+    inherit site tool wheels;
     zlibSupport = zlib != null;
     sqliteSupport = sqlite != null;
     dbSupport = db != null;
