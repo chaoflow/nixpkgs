@@ -1920,9 +1920,7 @@ let
 
   odamex = callPackage ../games/odamex { };
 
-  offlineimap = callPackage ../tools/networking/offlineimap {
-    inherit (pythonPackages) sqlite3;
-  };
+  offlineimap = callPackage ../tools/networking/offlineimap { };
 
   opencryptoki = callPackage ../tools/security/opencryptoki { };
 
@@ -7443,10 +7441,6 @@ let
 
   pysideShiboken = callPackage ../development/python-modules/pyside/shiboken.nix { };
 
-  pyx = callPackage ../development/python-modules/pyx { };
-
-  pyxml = callPackage ../development/python-modules/pyxml { };
-
   rbtools = callPackage ../development/python-modules/rbtools { };
 
   setuptools = pythonPackages.setuptools;
@@ -9936,8 +9930,8 @@ let
 
   inferno = callPackage_i686 ../applications/inferno { };
 
+  # We could pass it python3, but currently lxml doesn't work with it
   inkscape = callPackage ../applications/graphics/inkscape {
-    inherit (pythonPackages) lxml;
     lcms = lcms2;
   };
 

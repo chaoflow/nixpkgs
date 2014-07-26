@@ -1,10 +1,17 @@
 { stdenv, fetchurl, pkgconfig, perl, perlXMLParser, gtk, libXft
 , libpng, zlib, popt, boehmgc, libxml2, libxslt, glib, gtkmm
 , glibmm, libsigcxx, lcms, boost, gettext, makeWrapper, intltool
-, gsl, python, pyxml, lxml, poppler, imagemagick, libwpg }:
+, gsl, poppler, python, imagemagick, libwpg }:
+
+let
+  pysite = python.site {
+    wheels = [ python.wheels.lxml python.wheels.pyxml ];
+  };
+in
 
 stdenv.mkDerivation rec {
   name = "inkscape-0.48.5";
+  passthru = { python = pysite; };
 
   src = fetchurl {
     url = "mirror://sourceforge/inkscape/${name}.tar.bz2";
@@ -16,16 +23,10 @@ stdenv.mkDerivation rec {
   postPatch = stdenv.lib.optionalString doCheck
     ''sed -i 's:#include "../../src:#include "src:' src/cxxtests.cpp'';
 
-  propagatedBuildInputs = [
-    # Python is used at run-time to execute scripts, e.g., those from
-    # the "Effects" menu.
-    python pyxml lxml
-  ];
-
   buildInputs = [
     pkgconfig perl perlXMLParser gtk libXft libpng zlib popt boehmgc
     libxml2 libxslt glib gtkmm glibmm libsigcxx lcms boost gettext
-    makeWrapper intltool gsl poppler imagemagick libwpg
+    makeWrapper intltool gsl poppler imagemagick libwpg pysite
   ];
 
   configureFlags = "--with-python";
@@ -35,15 +36,11 @@ stdenv.mkDerivation rec {
   checkFlags = "-j1";
 
   postInstall = ''
-    # Make sure PyXML modules can be found at run-time.
-    for i in "$out/bin/"*
-    do
-      wrapProgram "$i" --prefix PYTHONPATH :      \
-       "$(toPythonPath ${pyxml}):$(toPythonPath ${lxml})"  \
-       --prefix PATH : ${python}/bin ||  \
-        exit 2
+    rm "$out/share/icons/hicolor/icon-theme.cache"
+    # inkscape needs to find the python with lxml/pyxml
+    for prg in "$out/bin/"*; do
+        wrapProgram "$prg" --prefix PATH ":" "${pysite}/bin" || exit 2
     done
-    rm $out/share/icons/hicolor/icon-theme.cache
   '';
 
   NIX_LDFLAGS = "-lX11";

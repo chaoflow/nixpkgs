@@ -63,7 +63,6 @@ let
   pythonmagick = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
   pythonSexy = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
   pyx = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
-  pyxml = { type = "job"; systems = ["x86_64-linux"]; schedulingPriority = 4; };
 });
 
 in jobs
