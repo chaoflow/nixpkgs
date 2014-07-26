@@ -50,7 +50,7 @@ python: self: {
   libxml2 = {
     disable = python.isPy3 or false;
     name = pkgs.libxml2.name;
-    srcs = pkgs.libxml2.src;
+    src = pkgs.libxml2.src;
     buildInputs = [ pkgs.libiconv pkgs.libxml2 ];
     patchPhase =
       ''

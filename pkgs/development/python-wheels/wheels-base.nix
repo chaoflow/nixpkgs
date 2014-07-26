@@ -9,7 +9,6 @@ python: self: {
   _build = bdistWheelDeps: { disable ? false
                            , name
                            , src ? null
-                           , srcs ? null
                            , md5 ? ""
                            , sha256 ? ""
                            , format ? "tar.gz"
@@ -18,14 +17,13 @@ python: self: {
                            , passthru ? {}
                            , ...} @ attrs:
 
-    assert src == null -> srcs != null || md5 != "" || sha256 != "";
-    assert srcs == null -> src != null || md5 != "" || sha256 != "";
+    assert src == null -> md5 != "" || sha256 != "";
     assert sha256 != "" -> md5 == "";
 
     let
       # These attributes are not (directly) passed to mkDerivation
       omitAttrs = [ "buildInputs" "name" "format" "md5" "sha256"
-                    "requires" "src" "srcs" "distname" "version" "passthru" ];
+                    "requires" "src" "distname" "version" "passthru" ];
       filteredAttrs = lib.filterAttrs (n: v: ! lib.elem n omitAttrs) attrs;
 
       version = (builtins.parseDrvName name).version;
@@ -37,10 +35,8 @@ python: self: {
           "${lib.substring 0 1 distname}/${distname}/${distname}-${version}.${format}";
       });
 
-      _srcs = if srcs != null then srcs else [ _src ];
-
       _passthru = {
-        inherit distname python requires version;
+        inherit distname python requires test version;
         isWheel = true;
       } // passthru;
 
@@ -49,12 +45,10 @@ python: self: {
         ] ++ (lib.filter (x: x != null) (lib.attrValues bdistWheelDeps));
       pythonpath = lib.makeSearchPath python.sitePackages _bdistWheelDeps;
 
-    in
-      if disable then null else
-      stdenv.mkDerivation ({
+      wheel = if disable then null else stdenv.mkDerivation ({
         passthru = _passthru;
         name = "${python.libPrefix}-wheel-${distname}-${version}";
-        srcs = _srcs;
+        src = _src;
         buildInputs = [ python unzip ] ++ buildInputs;
         buildPhase = "true";
         installPhase =
@@ -88,10 +82,11 @@ python: self: {
           '';
       } // filteredAttrs);
 
+    in
+      wheel;
 
   # function to build wheels
   build = self._build { inherit (self) argparse setuptools wheel; };
-
 
   # wheels for bootstrapping wheels, don't use for anything else
   _bootstrap = {
