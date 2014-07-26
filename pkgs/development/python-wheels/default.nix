@@ -1,4 +1,8 @@
-{ callPackage, lib, python }:
+let
+  pkgs = import ../../.. {};
+in
+
+{ callPackage ? pkgs.callPackage, lib ? pkgs.lib, python ? pkgs.python }:
 
 let
   wheelsFor = python: self:
