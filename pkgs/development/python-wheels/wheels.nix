@@ -3,6 +3,8 @@
  *  Default set of wheels.
  *
  *  Update manually or use xin
+ *
+ *  These wheels are build with the build command from wheels-base.nix.
  */
 
 { callPackage, fetchurl, lib, pkgs }:
@@ -16,11 +18,6 @@ python: self: {
   colorama = {
     name = "colorama-0.3.1";
     md5 = "95ce8bf32f5c25adea14b809db3509cb";
-  };
-
-  Cython = {
-    name = "Cython-0.20.2";
-    md5 = "7fc13e1c665bdf7cea19ad08906af91f";
   };
 
   execnet = {

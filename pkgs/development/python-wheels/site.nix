@@ -16,9 +16,9 @@ let
                 "pickPolicy" ];
   filteredAttrs = lib.filterAttrs (n: v: ! lib.elem n omitAttrs) attrs;
   scriptdists = lib.concatStringsSep " " scriptsFor;
-  recursive = wheels:
+  recursiveRequires = wheels:
     lib.flatten (map
-      (whl: [ whl ] ++ (recursive (whl.requires)))
+      (whl: [ whl ] ++ (recursiveRequires (whl.requires)))
       wheels);
 
   unveil = python27.tool {
@@ -41,9 +41,9 @@ let
       wheels);
 
   resolvedWheels = if (pickPolicy != null) then
-    pickVersions (recursive wheels)
+    pickVersions (recursiveRequires wheels)
   else
-    recursive wheels;
+    recursiveRequires wheels;
 
   wheelhouse = callPackage ./wheelhouse.nix {} { wheels = resolvedWheels; };
 in
