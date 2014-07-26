@@ -13,7 +13,7 @@
 , officialRelease ? false
 , # The platforms for which we build Nixpkgs.
   #supportedSystems ? [ "x86_64-linux" "i686-linux" /* "x86_64-darwin" */ ]
-  supportedSystems ? [ "x86_64-linux" ]
+  supportedSystems ? [ "x86_64-linux" "i686-linux" /* "x86_64-darwin" */ ]
 }:
 
 with import ./release-lib.nix { inherit supportedSystems; };
