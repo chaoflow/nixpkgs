@@ -97,6 +97,11 @@ python: self: {
     md5 = "905fe91ad14b912807e8fdc2ac2e2c23";
   };
 
+  Pyro3 = {
+    name = "Pyro-3.16";
+    md5 = "59d4d3f4a8786776c9d7f9051b8f1a69";
+  };
+
   pytest = {
     name = "pytest-2.6.0";
     md5 = "e492f76a986cb9dd0818b7ecc89af92e";

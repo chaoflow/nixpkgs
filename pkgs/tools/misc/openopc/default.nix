@@ -1,4 +1,10 @@
-{ stdenv, fetchurl, pythonFull }:
+{ stdenv, fetchurl, python27 }:
+
+let
+  python = python27.site {
+    wheels = python27.wheels.Pyro3;
+  };
+in
 
 stdenv.mkDerivation rec {
   name = "openopc-${version}";
@@ -13,16 +19,16 @@ stdenv.mkDerivation rec {
   installPhase = ''
     mkdir -p "$out/bin"
     mkdir -p "$out/share/doc/openopc"
-    mkdir -p "$out/${pythonFull.python.sitePackages}"
+    mkdir -p "$out/${python.python.sitePackages}"
     mkdir -p "$out/libexec/opc"
 
-    cp src/OpenOPC.py "$out/${pythonFull.python.sitePackages}"
+    cp src/OpenOPC.py "$out/${python.python.sitePackages}"
     cp src/opc.py "$out/libexec/opc/"
 
     cat > "$out/bin/opc" << __EOF__
     #!${stdenv.shell}
-    export PYTHONPATH="$out/${pythonFull.python.sitePackages}"
-    exec ${pythonFull}/bin/${pythonFull.python.executable} "$out/libexec/opc/opc.py" "\$@"
+    export PYTHONPATH="$out/${python.python.sitePackages}"
+    exec ${python}/bin/${python.python.executable} "$out/libexec/opc/opc.py" "\$@"
     __EOF__
     chmod a+x "$out/bin/opc"
 
