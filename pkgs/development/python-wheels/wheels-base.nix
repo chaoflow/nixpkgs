@@ -37,7 +37,7 @@ python: self: {
       });
 
       _passthru = {
-        inherit distname python requires test version;
+        inherit distname python requires version;
         isWheel = true;
       } // passthru;
 
