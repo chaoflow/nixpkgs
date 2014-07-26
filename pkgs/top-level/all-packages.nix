@@ -4162,14 +4162,12 @@ let
     wheels = callPackage ../development/python-wheels { python = pypy; };
   };
 
-  # python26Full = python26.site {
+  # python26Full = makeOverridable python26.site {
   #   name = "fullpython-${python26.version}";
-  #   modules = lib.filter (v: v != null) (lib.attrValues python26.modules);
   # };
 
-  # python27Full = python27.site {
+  # python27Full = makeOverridable python27.site {
   #   name = "fullpython-${python27.version}";
-  #   modules = lib.filter (v: v != null) (lib.attrValues python27.modules);
   # };
 
   python2nix = callPackage ../tools/package-management/python2nix { };

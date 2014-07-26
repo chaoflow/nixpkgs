@@ -1,7 +1,7 @@
 { buildEnv, callPackage, lib, makeWrapper, python, python27, stdenv }:
 
 { name ? ""
-, modules ? []
+, modules ? null
 , wheels ? []
 , paths ? []
 , scriptsFor ? []
@@ -20,6 +20,12 @@ let
     lib.flatten (map
       (whl: [ whl ] ++ (recursiveRequires (whl.requires)))
       wheels);
+
+  allModules = if python.isPy2 or false then
+    lib.filter (v: v != null) (lib.attrValues python.modules)
+  else
+    []
+  ;
 
   unveil = python27.tool {
     wheel = python27.wheels.unveil;
@@ -50,7 +56,11 @@ in
 
 buildEnv (lib.recursiveUpdate {
   name = "${python.libPrefix}-site" + lib.optionalString (name != "") "-${name}";
-  paths = [ python ] ++ modules ++ (resolvedWheels) ++ paths;
+  paths =
+    [ python ] ++
+    (if modules == null then allModules else modules) ++
+    (resolvedWheels) ++
+    paths;
   passthru = {
     inherit modules python wheels wheelhouse;
     inherit (python) executable libPrefix;
