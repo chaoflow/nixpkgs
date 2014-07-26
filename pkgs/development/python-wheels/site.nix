@@ -63,7 +63,7 @@ buildEnv (lib.recursiveUpdate {
     paths;
   passthru = {
     inherit modules python wheels wheelhouse;
-    inherit (python) executable libPrefix;
+    inherit (python) executable libPrefix sitePackages;
   };
   postBuild =
     ''
