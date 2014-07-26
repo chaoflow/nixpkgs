@@ -13,9 +13,12 @@ let
       wheels = callPackage ./wheels.nix {} python self;
     in
       base // (lib.mapAttrs
-        (name: wheel: self.build ((lib.attrByPath [name] {} meta) //
-                                  (lib.attrByPath [name] {} requires) //
-                                  wheel))
+        (name: wheelspec:
+          let
+            wheel = self.build ((lib.attrByPath [name] {} meta) //
+                                (lib.attrByPath [name] {} requires) //
+                                wheelspec);
+          in wheel)
         wheels);
 
   wheels = wheelsFor python wheels;

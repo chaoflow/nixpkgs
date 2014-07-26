@@ -1,12 +1,16 @@
 { buildEnv, callPackage, lib, makeWrapper, python, python27, stdenv }:
 
+let
+  firstInList = cur: new: false;
+in
+
 { name ? ""
 , modules ? null
 , wheels ? []
 , paths ? []
 , scriptsFor ? []
 , postBuild ? ""
-, pickPolicy ? null
+, pickPolicy ? firstInList
 , ... } @ attrs:
 
 assert lib.all (x: x.python == python) wheels;

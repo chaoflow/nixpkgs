@@ -6,16 +6,17 @@
 # Called like:
 # wheels = baseFor python wheels;
 python: self: {
-  _build = bdistWheelDeps: { disable ? false
-                           , name
-                           , src ? null
-                           , md5 ? ""
-                           , sha256 ? ""
-                           , format ? "tar.gz"
-                           , buildInputs ? []
-                           , requires ? []
-                           , passthru ? {}
-                           , ...} @ attrs:
+  _build = bdistWheelDeps:
+    { disable ? false
+    , name
+    , src ? null
+    , md5 ? ""
+    , sha256 ? ""
+    , format ? "tar.gz"
+    , buildInputs ? []
+    , requires ? []
+    , passthru ? {}
+    , ...} @ attrs:
 
     assert src == null -> md5 != "" || sha256 != "";
     assert sha256 != "" -> md5 == "";
