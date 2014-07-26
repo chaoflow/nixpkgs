@@ -1,4 +1,4 @@
-{ python2 }:
+{ fetchurl, python2 }:
 
 python2.tool {
   name = "nixtest-0.20140726";

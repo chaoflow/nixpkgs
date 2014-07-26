@@ -170,6 +170,7 @@ python: self: {
     src = fetchurl {
       url = https://github.com/chaoflow/unveil/archive/33cd58263e4fdd863757de7be859fcd538764748.zip;
       sha256 = "08p9nzp9jkhhl136xfyb5drwczg63j1k42vgn3k12bw21dv2p47c";
+    };
   };
 
   virtualenv = {
