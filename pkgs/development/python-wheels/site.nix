@@ -5,11 +5,36 @@ let
 in
 
 { name ? ""
+
+# By default all modules that ship with python are added to the python
+# site. By specifying a list of modules here you can add them
+# selectively.
 , modules ? null
+
+# List of wheels to be added to the python site. Requirements will be
+# added automatically.
+#
+# XXX: Currently requirements definitions are incomplete and you might
+# need to specify manually.
 , wheels ? []
+
+# List of non-wheel paths to be passed to buildEnv, e.g. if you need
+# openldap or something.
 , paths ? []
+
+# Currently, by default only the scripts are generated for python
+# packages/wheels you specify here. We might switch to default all and
+# use this parameter for selective generation.
 , scriptsFor ? []
+
+# Do something after the site is generated
 , postBuild ? ""
+
+# A pickPolicy is used to choose a wheel in case there are multiple
+# wheels with the same name in the list of wheels you specified +
+# their dependencies. pickPolicy takes the currently picked wheel and
+# the new wheel (see firstInList above). If it returns true, the new
+# wheel will be picked.
 , pickPolicy ? firstInList
 , ... } @ attrs:
 
