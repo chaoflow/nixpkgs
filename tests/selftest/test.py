@@ -1,4 +1,9 @@
 """Selftest of test system
+
+XXX: this is not up-to-date with what is really possible. Also we
+cannot catch assertion errors for the log. py.test might be a
+solution.
+
 """
 import os
 import sys

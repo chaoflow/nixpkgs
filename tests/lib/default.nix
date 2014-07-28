@@ -10,6 +10,14 @@ let
   testDriver = pkgs.nixtest;
 
 
+  # runTest runs test driver configured for one test (see makeTest
+  # below). It also installs it into its output to allow for easy
+  # re-runs ($out/bin/nixtest). A test failure is indicated by an
+  # empty file: $out/nix-support/failed.
+  #
+  # TODO: log output suitable for hydra. nixtest uses python's logging
+  # module. Log messages need to be caught and written to a log.xml
+  # (see nixos/lib/test-driver for the format).
   runTest = driver:
     pkgs.stdenv.mkDerivation rec {
       name = "nixtest-run-${driver.testName}";
@@ -39,21 +47,32 @@ let
     };
 
 
-  makeTest = { name,
-               environment ? {},
-               profile ? null,
-               profilePackages ? [],
-               skel ? null,
-               sources ? {},
-               symlinks ? {},
-               testDir ? null,
-               testFile ? null,
-               testModule ? null,
-  }:
-    # It's either testDir + testModule or testFile
-    assert testFile != null -> testDir == null;
-    assert testFile != null -> testModule == null;
-    assert testDir != null -> testModule != null;
+  makeTest =
+    { name
+
+    # An attribute set of additional environment variables to be set
+    # in the test environment.
+    , environment ? {}
+
+    # You can either specify profilePackages which are added to a
+    # profile created by buildEnv or create your own profile for full
+    # control.
+    , profile ? null
+    , profilePackages ? []
+
+    # skeleton directory for the test directory
+    , skel ? null
+
+    # sources to be copied to the test directory. It is ensured that
+    # they are owned and writable by the test user.
+    , sources ? {}
+
+    # Additional symlinks to be created in the test directory. There
+    # is at least one symlink for `profile`
+    , symlinks ? {}
+
+    # file containing the test code
+    , testFile ? null}:
 
     # Either you assemble your own profile or pass only packages.
     assert profile != null -> profilePackages == [];
@@ -61,7 +80,7 @@ let
     let
       _profile = if profile != null then profile else pkgs.buildEnv {
         name = "nix-test-${name}";
-        paths = profilePackages;
+        paths = [ pkgs.coreutils pkgs.bash ] ++ profilePackages;
       };
 
       # profile is just another symlink
@@ -80,9 +99,6 @@ let
         NIXTEST_SYMLINKS = attrsToEnvVar _symlinks;
       } // optionalAttrs (testFile != null) {
         NIXTEST_TESTFILE = testFile;
-      } // optionalAttrs (testDir != null) {
-        NIXTEST_TESTDIR = testDir;
-        NIXTEST_TESTMODULE = testModule;
       } // optionalAttrs (sources != {}) {
         NIXTEST_SOURCES = attrsToEnvVar sources;
       };
@@ -114,12 +130,9 @@ let
       { python, ... } @ testargs:
         let
           args = argsfn testargs;
-          profilePackages = args.profilePackages or [];
         in
         makeTest (recursiveUpdate args {
           name = "${python.libPrefix}-${args.name}";
-
-          profilePackages = [ pkgs.coreutils pkgs.bash ] ++ profilePackages;
 
           environment = {
             TEST_PYTHON_LIB_PREFIX = python.libPrefix;
@@ -201,6 +214,9 @@ let
       allTree // rec { inherit all allall; };
 
 
+  # scope for invocations of callPackage within test modules,
+  # i.e. makeTest and makePythonTest are available in addition to the
+  # defaultScope (pkgs and pkgs.xorg, see all-packages.nix).
   callPackageScope = { inherit
     callPackage
     makeTest
