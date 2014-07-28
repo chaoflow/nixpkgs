@@ -1,10 +1,8 @@
-Nixpkgs is a collection of packages for [Nix](http://nixos.org/nix/) package
-manager. Nixpkgs also includes [NixOS](http://nixos.org/nixos/) linux distribution source code.
+This branch (``python``) is home of a [nixpkgs testing](./tests)
+approach using [nixtest](https://github.com/chaoflow/nixtest) as
+testrunner and wheel-based [python
+packaging](./pkgs/development/python-wheels/CONCEPT.org).
 
-* [NixOS installation instructions](http://nixos.org/nixos/manual/#ch-installation)
-* [Manual (How to write packages for Nix)](http://nixos.org/nixpkgs/manual/)
-* [Manual (NixOS)](http://nixos.org/nixos/manual/)
-* [Continuous build](http://hydra.nixos.org/jobset/nixos/trunk-combined)
-* [Tests](http://hydra.nixos.org/job/nixos/trunk-combined/tested#tabs-constituents)
-* [Mailing list](http://lists.science.uu.nl/mailman/listinfo/nix-dev)
-* [IRC - #nixos on freenode.net](irc://irc.freenode.net/#nixos)
+This branch is not meant to be merged into master and expected to
+experience rebasing. There will be specific pull requests once the new
+wheel-based python packaging stabilizes.
