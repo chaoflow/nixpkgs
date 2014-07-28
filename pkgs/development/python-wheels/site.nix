@@ -16,8 +16,8 @@ in
 assert lib.all (x: x.python == python) wheels;
 
 let
-  omitAttrs = [ "name" "modules" "passthru" "wheels" "postBuild" "scriptsFor"
-                "pickPolicy" ];
+  omitAttrs = [ "name" "modules" "passthru" "wheels" "postBuild"
+                "scriptsFor" "pickPolicy" "paths" ];
   filteredAttrs = lib.filterAttrs (n: v: ! lib.elem n omitAttrs) attrs;
   scriptdists = lib.concatStringsSep " " scriptsFor;
   recursiveRequires = wheels:
