@@ -7,15 +7,38 @@
 # wheels = baseFor python wheels;
 python: self: {
   _build = bdistWheelDeps:
+
+    # disable the wheel, i.e. return null, e.g. for a specific python version
     { disable ? false
+
+    # <distname>-<version> distribution name and version
     , name
+
+    # optionally specifiy src explicitly, by default the source is
+    # fetched from pypi using distname and version (see above).
     , src ? null
+
+    # md5/sha256 of the fetched source, required.
     , md5 ? ""
     , sha256 ? ""
+
+    # Some distributions are only available as zip on pypi
     , format ? "tar.gz"
+
+    # non-python build inputs to build the wheel. Python runtime
+    # dependencies (see requires below) are usually not needed to
+    # create the binary distribution in wheel format. But lxml for
+    # example needs libxml2 and libxslt.
     , buildInputs ? []
+
+    # runtime requirements, other wheels.
     , requires ? []
+
+    # things you might want to passthru
     , passthru ? {}
+
+    # Except certain omitted attributes (see below), everything is
+    # passed on the stdenv.mkDerivation.
     , ...} @ attrs:
 
     assert src == null -> md5 != "" || sha256 != "";
@@ -46,7 +69,7 @@ python: self: {
         ] ++ (lib.filter (x: x != null) (lib.attrValues bdistWheelDeps));
       pythonpath = lib.makeSearchPath python.sitePackages _bdistWheelDeps;
 
-      wheel = if disable then null else stdenv.mkDerivation ({
+      wheel = stdenv.mkDerivation ({
         passthru = _passthru;
         name = "${python.libPrefix}-wheel-${distname}-${version}";
         src = _src;
@@ -84,10 +107,8 @@ python: self: {
       } // filteredAttrs);
 
     in
-      wheel;
+      if disable then null else wheel;
 
-  # function to build wheels
-  build = self._build { inherit (self) argparse setuptools wheel; };
 
   # wheels for bootstrapping wheels, don't use for anything else
   _bootstrap = {
@@ -138,6 +159,7 @@ python: self: {
     };
   };
 
+
   argparse = self._build {
     inherit (self._bootstrap) argparse setuptools wheel;
   } rec {
@@ -145,6 +167,7 @@ python: self: {
     md5 = "2fbef8cb61e506c706957ab6e135840c";
     disable = ! (python.isPy26 or false);
   };
+
 
   setuptools = self._build {
     inherit (self) argparse;
@@ -154,6 +177,7 @@ python: self: {
     md5 = "3540a44b90017cbb851840934156848e";
   }; 
 
+
   wheel = self._build {
     inherit (self) argparse setuptools;
     inherit (self._bootstrap) wheel;
@@ -161,4 +185,8 @@ python: self: {
     name = "wheel-0.24.0";
     md5 = "3b0d66f0d127ea8befaa5d11453107fd";
   };
+
+
+  # function to build wheels
+  build = self._build { inherit (self) argparse setuptools wheel; };
 }

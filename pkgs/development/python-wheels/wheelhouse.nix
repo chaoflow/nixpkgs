@@ -1,6 +1,8 @@
 #
 # Wheelhouse - a collection of .whl files suitable for pip --find-links
 #
+# See nixpkgs/tests/python/virtualenv.py for an example
+#
 { lib, python, stdenv }:
 
 { name ? "wheelhouse", wheels ? [], ...} @ attrs:

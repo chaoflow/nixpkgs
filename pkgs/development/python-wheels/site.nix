@@ -1,6 +1,19 @@
+#
+# A python.site comes closest to python on other distributions with:
+#
+# - bin/python
+# - bin/<scripts for packages>
+# - lib/pythonX.Y
+# - lib/pythonX.Y/site-packages
+#
+# Additionally you can add non-python packages to be merged in (see
+# paths arg below).
+#
 { buildEnv, callPackage, lib, makeWrapper, python, python27, stdenv }:
 
 let
+  # The default pickPolicy in case of multiple wheels with the same
+  # distname simple picks the first one encountered.
   firstInList = cur: new: false;
 in
 
@@ -36,15 +49,22 @@ in
 # the new wheel (see firstInList above). If it returns true, the new
 # wheel will be picked.
 , pickPolicy ? firstInList
+
+# most attrs are passed on to buildEnv, for exceptions see omitAttrs
+# below.
 , ... } @ attrs:
 
+
 assert lib.all (x: x.python == python) wheels;
+
 
 let
   omitAttrs = [ "name" "modules" "passthru" "wheels" "postBuild"
                 "scriptsFor" "pickPolicy" "paths" ];
   filteredAttrs = lib.filterAttrs (n: v: ! lib.elem n omitAttrs) attrs;
+
   scriptdists = lib.concatStringsSep " " scriptsFor;
+
   recursiveRequires = wheels:
     lib.flatten (map
       (whl: [ whl ] ++ (recursiveRequires (whl.requires)))
@@ -81,8 +101,9 @@ let
     recursiveRequires wheels;
 
   wheelhouse = callPackage ./wheelhouse.nix {} { wheels = resolvedWheels; };
-in
 
+
+in
 buildEnv (lib.recursiveUpdate {
   name = "${python.libPrefix}-site" + lib.optionalString (name != "") "-${name}";
   paths =
