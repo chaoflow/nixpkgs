@@ -68,7 +68,7 @@ let
   recursiveRequires = wheels:
     lib.flatten (map
       (whl: [ whl ] ++ (recursiveRequires (whl.requires)))
-      wheels);
+      (lib.filter (x: x != null) wheels));
 
   allModules = if python.isPy2 or false then
     lib.filter (v: v != null) (lib.attrValues python.modules)
