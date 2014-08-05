@@ -95,6 +95,7 @@ python: self: {
   py = {
     name = "py-1.4.22";
     md5 = "1af93ed9a00bc38385142ae0eb7cf3ff";
+    requires = lib.optional (python.isPy26 or false) self.argparse;
   };
 
   pyflakes = {
