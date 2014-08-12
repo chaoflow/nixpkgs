@@ -104,6 +104,7 @@ let
       executable = libPrefix;
       sitePackages = "lib/${libPrefix}/site-packages";
       interpreter = "${self}/bin/${executable}";
+      virtualenv = tool { wheel = wheels.virtualenv; };
     };
 
     enableParallelBuilding = true;
