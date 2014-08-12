@@ -10,3 +10,8 @@ stabilize.
 Hydra builds this branch as the
 [python-rework](http://hydra.nixos.org/jobset/nixpkgs/python-rework)
 jobset.
+
+To make use of these hydra builds, subscribe to the channel:
+
+  % nix-channel --add http://hydra.nixos.org/jobset/nixpkgs/python-rework/channel/latest python-rework
+  % nix-channel --update
