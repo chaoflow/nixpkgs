@@ -1,4 +1,4 @@
-The ``python`` branch is home of wheel-based [python
+The python branch is home of wheel-based [python
 packaging](./pkgs/development/python-wheels/) and experimental
 [nixpkgs testing](./tests) using
 [nixtest](https://github.com/chaoflow/nixtest) as test driver.
