@@ -70,7 +70,7 @@ let
       (whl: [ whl ] ++ (recursiveRequires (whl.requires)))
       (lib.filter (x: x != null) wheels));
 
-  allModules = lib.filter (v: v != null) (lib.attrValues python.modules or []);
+  allModules = lib.filter (v: v != null) (lib.attrValues python.modules or {});
   _modules = if modules == null then allModules else modules;
 
   unveil = python27.tool {
