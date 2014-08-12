@@ -70,11 +70,8 @@ let
       (whl: [ whl ] ++ (recursiveRequires (whl.requires)))
       (lib.filter (x: x != null) wheels));
 
-  allModules = if python.isPy2 or false then
-    lib.filter (v: v != null) (lib.attrValues python.modules)
-  else
-    []
-  ;
+  allModules = lib.filter (v: v != null) (lib.attrValues python.modules or []);
+  _modules = if modules == null then allModules else modules;
 
   unveil = python27.tool {
     wheel = python27.wheels.unveil;
@@ -106,14 +103,11 @@ let
 in
 buildEnv (lib.recursiveUpdate {
   name = "${python.libPrefix}-site" + lib.optionalString (name != "") "-${name}";
-  paths =
-    [ python ] ++
-    (if modules == null then allModules else modules) ++
-    (resolvedWheels) ++
-    paths;
+  paths = [ python ] ++ _modules ++ resolvedWheels ++ paths;
   passthru = {
-    inherit modules python wheels wheelhouse;
+    inherit python wheels wheelhouse;
     inherit (python) executable libPrefix sitePackages;
+    modules = _modules;
   };
   postBuild =
     ''

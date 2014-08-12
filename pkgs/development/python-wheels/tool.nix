@@ -56,8 +56,6 @@ let
 
   site = python.site {
     name = _name;
-    modules = lib.optionals (python.isPy2 or false)
-                            [ python.modules.readline python.modules.sqlite3 ];
     wheels = wheels ++ [ _wheel ];
     scriptsFor = [];
     inherit pickPolicy;
