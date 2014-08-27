@@ -4555,6 +4555,8 @@ let
 
   checkstyle = callPackage ../development/tools/analysis/checkstyle { };
 
+  flake8 = python3.tool { wheel = python3.wheels.flake8; };
+
   flex_2_5_35 = callPackage ../development/tools/parsing/flex/2.5.35.nix { };
   flex_2_5_39 = callPackage ../development/tools/parsing/flex/2.5.39.nix { };
   flex = flex_2_5_39;

@@ -1,6 +1,7 @@
 ### This file will be generated and is recursively merged under wheels
 python: self:
 {
+  flake8.requires = [ self.setuptools self.mccabe self.pep8 self.pyflakes ];
   grako.requires = [];
   ipdb.requires = [ self.ipython ];
   plumbum.requires = [ self.six ];
