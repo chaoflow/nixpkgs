@@ -10,6 +10,24 @@
 { callPackage, fetchurl, lib, pkgs }:
 
 python: self: {
+  cffi = {
+    name = "cffi-0.8.6";
+    md5 = "474b5a68299a6f05009171de1dc91be6";
+    buildInputs = [ pkgs.libffi ];
+  };
+
+  clang = {
+    name = "clang-3.4.dev192547";
+    md5 = "5b4f5ce4a4c86c68f815830c51efb52a";
+    # XXX: which package is the one orig-clang is pointing at?
+    buildInputs = [ pkgs.llvmPackages.clang ];
+    patchPhase =
+      ''
+      sed -i -e "s,file = 'libclang.so',file = '${pkgs.llvmPackages.clang}/lib/libclang.so'," \
+            clang/cindex.py
+      '';
+  };
+
   click = {
     name = "click-2.1";
     md5 = "0ba97ba09af82c56e2d35f3412d0aa6e";
@@ -18,6 +36,11 @@ python: self: {
   colorama = {
     name = "colorama-0.3.1";
     md5 = "95ce8bf32f5c25adea14b809db3509cb";
+  };
+
+  ctypeslib2 = {
+    name = "ctypeslib2-2.0rc3";
+    md5 = "677c73f84f3dbae0f5fbe38b6c639421";
   };
 
   execnet = {
@@ -96,6 +119,11 @@ python: self: {
     name = "py-1.4.22";
     md5 = "1af93ed9a00bc38385142ae0eb7cf3ff";
     requires = lib.optional (python.isPy26 or false) self.argparse;
+  };
+
+  pycparser = {
+    name = "pycparser-2.10";
+    md5 = "d87aed98c8a9f386aa56d365fe4d515f";
   };
 
   pyflakes = {

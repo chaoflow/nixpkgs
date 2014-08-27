@@ -4476,6 +4476,8 @@ let
 
   cflow = callPackage ../development/tools/misc/cflow { };
 
+  clang2py = python2.tool { wheel = python2.wheels.ctypeslib2; };
+
   cov-build = callPackage ../development/tools/analysis/cov-build {};
 
   cppcheck = callPackage ../development/tools/analysis/cppcheck { };

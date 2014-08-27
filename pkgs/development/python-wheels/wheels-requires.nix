@@ -1,6 +1,8 @@
 ### This file will be generated and is recursively merged under wheels
 python: self:
 {
+  cffi.requires = [ self.pycparser ];
+  ctypeslib2.requires = [ self.clang ];
   flake8.requires = [ self.setuptools self.mccabe self.pep8 self.pyflakes ];
   grako.requires = [];
   ipdb.requires = [ self.ipython ];
