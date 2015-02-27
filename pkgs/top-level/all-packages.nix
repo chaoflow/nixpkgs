@@ -4098,21 +4098,39 @@ let
   python26 = callPackage ../development/interpreters/python/2.6 {
     db = db47;
     self = python26;
+    site = callPackage ../development/python-wheels/site.nix { python = python26; };
+    tool = callPackage ../development/python-wheels/tool.nix { python = python26; };
+    wheels = callPackage ../development/python-wheels { python = python26; };
   };
   python27 = callPackage ../development/interpreters/python/2.7 {
     self = python27;
+    site = callPackage ../development/python-wheels/site.nix { python = python27; };
+    tool = callPackage ../development/python-wheels/tool.nix { python = python27; };
+    wheels = callPackage ../development/python-wheels { python = python27; };
   };
   python32 = callPackage ../development/interpreters/python/3.2 {
     self = python32;
+    site = callPackage ../development/python-wheels/site.nix { python = python32; };
+    tool = callPackage ../development/python-wheels/tool.nix { python = python32; };
+    wheels = callPackage ../development/python-wheels { python = python32; };
   };
   python33 = callPackage ../development/interpreters/python/3.3 {
     self = python33;
+    site = callPackage ../development/python-wheels/site.nix { python = python33; };
+    tool = callPackage ../development/python-wheels/tool.nix { python = python33; };
+    wheels = callPackage ../development/python-wheels { python = python33; };
   };
   python34 = hiPrio (callPackage ../development/interpreters/python/3.4 {
     self = python34;
+    site = callPackage ../development/python-wheels/site.nix { python = python34; };
+    tool = callPackage ../development/python-wheels/tool.nix { python = python34; };
+    wheels = callPackage ../development/python-wheels { python = python34; };
   });
-  pypy = callPackage ../development/interpreters/pypy/2.4 {
+  pypy = callPackage ../development/interpreters/pypy/2.3 {
     self = pypy;
+    site = callPackage ../development/python-wheels/site.nix { python = pypy; };
+    tool = callPackage ../development/python-wheels/tool.nix { python = pypy; };
+    wheels = callPackage ../development/python-wheels { python = pypy; };
   };
 
   pythonFull = python2Full;
@@ -4124,38 +4142,6 @@ let
   python27Full = python27.override {
     includeModules = true;
     self = python27Full;
-
-  python26 = callPackage ../development/interpreters/python/2.6 {
-    db = db47;
-    site = callPackage ../development/python-wheels/site.nix { python = python26; };
-    tool = callPackage ../development/python-wheels/tool.nix { python = python26; };
-    wheels = callPackage ../development/python-wheels { python = python26; };
-  };
-  python27 = callPackage ../development/interpreters/python/2.7 {
-    site = callPackage ../development/python-wheels/site.nix { python = python27; };
-    tool = callPackage ../development/python-wheels/tool.nix { python = python27; };
-    wheels = callPackage ../development/python-wheels { python = python27; };
-  };
-  python32 = callPackage ../development/interpreters/python/3.2 {
-    site = callPackage ../development/python-wheels/site.nix { python = python32; };
-    tool = callPackage ../development/python-wheels/tool.nix { python = python32; };
-    wheels = callPackage ../development/python-wheels { python = python32; };
-  };
-  python33 = callPackage ../development/interpreters/python/3.3 {
-    site = callPackage ../development/python-wheels/site.nix { python = python33; };
-    tool = callPackage ../development/python-wheels/tool.nix { python = python33; };
-    wheels = callPackage ../development/python-wheels { python = python33; };
-  };
-  python34 = hiPrio (callPackage ../development/interpreters/python/3.4 {
-    site = callPackage ../development/python-wheels/site.nix { python = python34; };
-    tool = callPackage ../development/python-wheels/tool.nix { python = python34; };
-    wheels = callPackage ../development/python-wheels { python = python34; };
-  });
-
-  pypy = callPackage ../development/interpreters/pypy/2.3 {
-    site = callPackage ../development/python-wheels/site.nix { python = pypy; };
-    tool = callPackage ../development/python-wheels/tool.nix { python = pypy; };
-    wheels = callPackage ../development/python-wheels { python = pypy; };
   };
 
   # python26Full = makeOverridable python26.site {
